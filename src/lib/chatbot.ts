@@ -1,5 +1,4 @@
 import { getLiveMatches, getUpcomingMatches, searchPlayers } from "./tennis";
-import { getRankings } from "./espn";
 import { formatSets } from "./format";
 
 function matchName(m: { players?: { p1?: { name?: string }; p2?: { name?: string } } }) {
@@ -110,17 +109,6 @@ async function upcomingAnswer(): Promise<string> {
   }
 }
 
-async function rankingAnswer(tour: "atp" | "wta"): Promise<string> {
-  try {
-    const rankings = await getRankings(tour, 5);
-    if (rankings.length === 0) return "Rankings aren't available right now — try the Rankings tab.";
-    const list = rankings.slice(0, 5).map((r) => `${r.rank}. ${r.name}${r.country ? ` (${r.country})` : ""}`).join("\n");
-    return `Top 5 ${tour.toUpperCase()}:\n${list}`;
-  } catch {
-    return "Rankings aren't available right now — try the Rankings tab.";
-  }
-}
-
 async function playerAnswer(name: string): Promise<string> {
   try {
     const players = await searchPlayers(name);
@@ -151,20 +139,20 @@ function extractPlayerName(text: string): string | null {
 export async function answerChat(message: string): Promise<string> {
   const text = message.toLowerCase().trim();
 
-  if (!text) return "Ask me about live matches, rankings, upcoming fixtures, a player, or how tennis scoring works!";
+  if (!text) return "Ask me about live matches, upcoming fixtures, a player, or how tennis scoring works!";
 
   if (includesAny(text, ["thank", "thanks", "thx"])) {
-    return "You're welcome! Anything else — live scores, rankings, or a player?";
+    return "You're welcome! Anything else — live scores or a player?";
   }
   if (includesAny(text, ["bye", "goodbye", "see ya"])) {
     return "See you on the court! 🎾";
   }
   if (/\b(hi|hello|hey|yo)\b/.test(text) && text.length < 20) {
-    return "Hey! I'm the MatchPoint assistant. Ask me who's playing live, top rankings, a player, or tennis terms like \"deuce\".";
+    return "Hey! I'm the MatchPoint assistant. Ask me who's playing live, a player, or tennis terms like \"deuce\".";
   }
 
   if (includesAny(text, ["what is matchpoint", "what can you do", "help", "what do you do"])) {
-    return "MatchPoint tracks live ATP & WTA tennis — live scores, upcoming matches, recent results, player profiles, and rankings. Ask me things like \"who's live right now\", \"top 5 ATP\", \"how is Sinner doing\", or \"what's a tiebreak\".";
+    return "MatchPoint tracks live ATP & WTA tennis — live scores, upcoming matches, recent results, and player profiles. Ask me things like \"who's live right now\", \"how is Sinner doing\", or \"what's a tiebreak\".";
   }
 
   const playerName = extractPlayerName(text);
@@ -176,13 +164,6 @@ export async function answerChat(message: string): Promise<string> {
 
   if (includesAny(text, ["upcoming", "next match", "schedule", "what's on", "fixtures"])) {
     return upcomingAnswer();
-  }
-
-  if (includesAny(text, ["wta rank", "women's rank", "women rank"])) {
-    return rankingAnswer("wta");
-  }
-  if (includesAny(text, ["atp rank", "men's rank", "men rank", "rank", "ranking", "number 1", "#1", "top player"])) {
-    return rankingAnswer(includesAny(text, ["wta", "women"]) ? "wta" : "atp");
   }
 
   for (const entry of GLOSSARY) {
@@ -198,5 +179,5 @@ export async function answerChat(message: string): Promise<string> {
     return "You can search any player by name in the Players tab for their ranking, hand, and playing style.";
   }
 
-  return "I'm not sure about that one — try asking about live matches, rankings, a player's name, upcoming fixtures, or tennis terms like \"deuce\" or \"tiebreak\".";
+  return "I'm not sure about that one — try asking about live matches, a player's name, upcoming fixtures, or tennis terms like \"deuce\" or \"tiebreak\".";
 }

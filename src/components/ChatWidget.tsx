@@ -7,7 +7,7 @@ type ChatMessage = { role: "user" | "bot"; text: string };
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "bot", text: "Hey! Ask me who's live right now, top rankings, or tennis terms like \"deuce\"." },
+    { role: "bot", text: "Hey! Ask me who's live right now, a player, or tennis terms like \"deuce\"." },
   ]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -84,7 +84,7 @@ export default function ChatWidget() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about scores, rankings…"
+              placeholder="Ask about scores, players…"
               className="flex-1 text-sm rounded-lg px-3 py-2 outline-none"
               style={{ background: "var(--bg-elevated-2)", color: "var(--text)", border: "1px solid var(--border)" }}
             />

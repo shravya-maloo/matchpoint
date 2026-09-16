@@ -9,9 +9,9 @@ import "@fontsource/inter/700.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MatchPoint — Live Tennis Scores, Rankings & Players",
+  title: "MatchPoint — Live Tennis Scores & Players",
   description:
-    "Live ATP and WTA tennis scores, upcoming fixtures, results, player profiles, and rankings, all in one place.",
+    "Live ATP and WTA tennis scores, upcoming fixtures, results, and player profiles, all in one place.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -8,14 +8,12 @@ import LiveTab from "@/components/tabs/LiveTab";
 import UpcomingTab from "@/components/tabs/UpcomingTab";
 import ResultsTab from "@/components/tabs/ResultsTab";
 import PlayersTab from "@/components/tabs/PlayersTab";
-import RankingsTab from "@/components/tabs/RankingsTab";
 
 const TABS = [
   { key: "live", label: "Live" },
   { key: "upcoming", label: "Upcoming" },
   { key: "results", label: "Results" },
   { key: "players", label: "Players" },
-  { key: "rankings", label: "Rankings" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -39,7 +37,7 @@ export default function Home() {
             Match<span style={{ color: "var(--accent)" }}>Point</span>
           </h1>
           <p className="text-[var(--text-soft)] text-sm max-w-md">
-            Live ATP &amp; WTA scores, fixtures, results, players and rankings — all in one place.
+            Live ATP &amp; WTA scores, fixtures, results, and players — all in one place.
           </p>
         </header>
 
@@ -65,7 +63,6 @@ export default function Home() {
               onConsumedInitialQuery={() => setPlayerToOpen(null)}
             />
           )}
-          {tab === "rankings" && <RankingsTab />}
         </section>
       </main>
       <ChatWidget />
