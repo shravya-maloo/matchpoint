@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getRecentResults } from "@/lib/espn";
+import { getRecentResults, getResultsInRange } from "@/lib/espn";
 
 export async function GET(req: NextRequest) {
-  const daysBack = Number(req.nextUrl.searchParams.get("days") ?? "4");
+  const from = req.nextUrl.searchParams.get("from");
+  const to = req.nextUrl.searchParams.get("to");
+
   try {
-    const results = await getRecentResults(Number.isFinite(daysBack) ? daysBack : 4);
+    const results =
+      from && to
+        ? await getResultsInRange(from, to)
+        : await getRecentResults(Number(req.nextUrl.searchParams.get("days") ?? "4") || 4);
     return NextResponse.json({ results });
   } catch (err) {
     return NextResponse.json(

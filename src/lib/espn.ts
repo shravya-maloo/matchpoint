@@ -18,11 +18,8 @@ function ymd(d: Date) {
   return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
 }
 
-async function fetchScoreboard(tour: "atp" | "wta", daysBack: number) {
-  const to = new Date();
-  const from = new Date();
-  from.setDate(from.getDate() - daysBack);
-  const url = `${SITE_BASE}/${tour}/scoreboard?dates=${ymd(from)}-${ymd(to)}&limit=200`;
+async function fetchScoreboard(tour: "atp" | "wta", from: Date, to: Date) {
+  const url = `${SITE_BASE}/${tour}/scoreboard?dates=${ymd(from)}-${ymd(to)}&limit=300`;
 
   const res = await fetch(url, { headers: { Accept: "application/json" } });
   if (!res.ok) throw new Error(`ESPN scoreboard ${tour} failed: ${res.status}`);
@@ -132,13 +129,51 @@ function extractResults(tour: "atp" | "wta", json: unknown): ResultMatch[] {
   return results.sort((x, y) => new Date(y.date).getTime() - new Date(x.date).getTime());
 }
 
-export async function getRecentResults(daysBack = 4): Promise<ResultMatch[]> {
-  return cachedWithFallback(`espn:results:${daysBack}`, 900, async () => {
+const MAX_RANGE_DAYS = 90;
+
+function parseDateOnly(s: string): Date {
+  // Interpreted as UTC midnight so "2026-09-01" means the same calendar day
+  // for every caller regardless of local timezone.
+  const d = new Date(`${s}T00:00:00Z`);
+  if (isNaN(d.getTime())) throw new Error(`Invalid date: ${s}`);
+  return d;
+}
+
+/**
+ * Results for an arbitrary [from, to] calendar-day range (inclusive), both
+ * as "YYYY-MM-DD" strings. A range whose `to` day is today or yesterday is
+ * cached briefly since a match in progress there could still complete; an
+ * older, fully-settled range is cached for a day since ESPN's history for
+ * finished tournaments doesn't change.
+ */
+export async function getResultsInRange(fromStr: string, toStr: string): Promise<ResultMatch[]> {
+  const from = parseDateOnly(fromStr);
+  const to = parseDateOnly(toStr);
+  if (from.getTime() > to.getTime()) throw new Error("`from` date must not be after `to` date.");
+
+  const rangeDays = Math.round((to.getTime() - from.getTime()) / 86400000) + 1;
+  if (rangeDays > MAX_RANGE_DAYS) {
+    throw new Error(`Date range too wide — max ${MAX_RANGE_DAYS} days, got ${rangeDays}.`);
+  }
+
+  const daysSinceRangeEnd = Math.floor((Date.now() - to.getTime()) / 86400000);
+  const ttlSeconds = daysSinceRangeEnd <= 1 ? 900 : 86400;
+
+  return cachedWithFallback(`espn:results:${fromStr}:${toStr}`, ttlSeconds, async () => {
     const [atpJson, wtaJson] = await Promise.all([
-      fetchScoreboard("atp", daysBack),
-      fetchScoreboard("wta", daysBack),
+      fetchScoreboard("atp", from, to),
+      fetchScoreboard("wta", from, to),
     ]);
     return [...extractResults("atp", atpJson), ...extractResults("wta", wtaJson)];
   });
+}
+
+/** Convenience wrapper for the common "last N days through today" case. */
+export async function getRecentResults(daysBack = 4): Promise<ResultMatch[]> {
+  const to = new Date();
+  const from = new Date();
+  from.setDate(from.getDate() - daysBack);
+  const ymdStr = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  return getResultsInRange(ymdStr(from), ymdStr(to));
 }
 
