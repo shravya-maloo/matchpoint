@@ -6,6 +6,7 @@ import FunFactButton from "@/components/FunFactButton";
 import { isMarqueeMatch } from "@/lib/marquee";
 import { tournamentCategory, type TournamentCategory } from "@/lib/tournamentCategory";
 import { formatDate } from "@/lib/dates";
+import { watchLinkFor } from "@/lib/watch";
 import MatchDetailModal, { type DetailData } from "@/components/MatchDetailModal";
 import MatchFilters from "@/components/MatchFilters";
 
@@ -102,6 +103,7 @@ export default function ResultsTab() {
                   winner: r.player1.winner ? 1 : r.player2.winner ? 2 : null,
                   summary: r.summary,
                   lengthLabel: `${formatDate(r.date)} · ${totalGames(r)} total games`,
+                  watchLinks: r.broadcasts.map((b) => ({ label: b, url: watchLinkFor(b) })),
                 })
               }
             >

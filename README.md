@@ -6,9 +6,10 @@ Live ATP & WTA tennis — live scores, upcoming fixtures, recent results, player
 
 - **Live** — matches in progress right now, both tours, auto-refreshing, with start time and time-on-court
 - **Upcoming** — scheduled fixtures with date/time
-- **Results** — recently completed matches with date and a "total games" length indicator, plus a link to search highlights on YouTube
+- **Results** — recently completed matches with date and a "total games" length indicator, plus links to watch and a highlights search
 - **Players** — search any player, see ranking, hand, backhand style
 - **Rankings** — ATP & WTA top 100
+- 📺 **Watch links** on every match: known broadcasters (ESPN+, Tennis Channel, Sky Sports, etc.) link to their real homepage; anything else falls back to a live-stream search link
 - 🔎 **Filters & sorting** on Live/Upcoming/Results: filter by tournament type (Grand Slam / Masters / Tour), a specific tournament, or a player name; sort by date or match length, ascending or descending
 - 📰 **Live updates ticker** scrolling at the top of the page
 - 🎾 **Click any match** to open a detail view: player avatars, a bigger set-by-set score (plus the live point score), a highlights link, and a fun fact — shown for every match, not just marquee ones
@@ -67,6 +68,8 @@ src/
 ## Known gaps / things to verify after deploying
 
 - **Rankings** use ESPN's undocumented core API. Fixed one confirmed bug (its `$ref` links pointed at an internal `.pvt` domain that isn't publicly reachable — rewritten to `.com`), and made the list-parsing defensive against a few plausible response shapes, but the exact shape still hasn't been checked against a real response — if it's still empty, the error message now returned will say which shape assumption failed, which should make it a quick fix.
+- **"Unknown" player names in Results**: ESPN sometimes omits the structured athlete object (common in qualifying rounds, retired players, or ones not yet in ESPN's roster) but always includes a free-text summary like "Fearnley (GBR) bt Carballes Baena (ESP) 7-6 6-3". Fixed by parsing names out of that summary as a fallback — verified against several real examples, but ESPN's summary format could vary in ways not seen in testing.
+- **Watch links**: only real broadcaster data comes from ESPN's Results (a small hardcoded list of known broadcasters maps to their real homepage; anything else gets a Google search link). Live and Upcoming have no broadcaster data at all from the Live Tennis API, so those always get a generic "find a live stream" search link, not a guaranteed direct source.
 - **Fun facts** ship with only a generic trivia pool — no curated per-player/tournament facts are seeded into the `fun_facts` table yet. Add rows there (subject_type: `player` | `tournament`, subject, fact) to have marquee matches surface something more specific.
 - **Player photos**: neither data source provides headshots, so player "faces" in the match detail view are colored initials avatars, not real photos.
 - **Match duration**: neither data source provides a true duration field. Live matches show genuine elapsed time (now minus the match's scheduled start). Completed matches (Results) instead show "total games played" as an honest, derivable proxy for match length — it's labeled as such rather than presented as a real duration.

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Fixture } from "livetennisapi";
 import { formatDate } from "@/lib/dates";
+import { genericWatchSearchUrl } from "@/lib/watch";
 import { tournamentCategory, type TournamentCategory } from "@/lib/tournamentCategory";
 import MatchDetailModal, { type DetailData } from "@/components/MatchDetailModal";
 import MatchFilters from "@/components/MatchFilters";
@@ -84,6 +85,7 @@ export default function UpcomingTab() {
                 player1: { name: f.player1_name ?? "TBD" },
                 player2: { name: f.player2_name ?? "TBD" },
                 startTime: f.start_time,
+                watchLinks: [{ label: "Find a live stream", url: genericWatchSearchUrl(f.tournament ?? "", f.tour ?? undefined) }],
               })
             }
           >

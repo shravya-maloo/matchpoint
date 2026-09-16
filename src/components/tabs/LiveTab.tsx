@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Match } from "livetennisapi";
 import { formatSets, formatCurrentGame, setsPerPlayer } from "@/lib/format";
 import { formatDate, elapsedSince, elapsedMinutes } from "@/lib/dates";
+import { genericWatchSearchUrl } from "@/lib/watch";
 import { tournamentCategory, type TournamentCategory } from "@/lib/tournamentCategory";
 import { isMarqueeMatch } from "@/lib/marquee";
 import FunFactButton from "@/components/FunFactButton";
@@ -124,6 +125,7 @@ export default function LiveTab() {
                   currentGame: formatCurrentGame(m.score),
                   winner: m.winner ?? null,
                   lengthLabel: elapsed ? `Started ${formatDate(m.scheduled_time)} · on court ${elapsed}` : formatDate(m.scheduled_time),
+                  watchLinks: [{ label: "Find a live stream", url: genericWatchSearchUrl(m.tournament ?? "", m.tour ?? undefined) }],
                 });
               }}
             >

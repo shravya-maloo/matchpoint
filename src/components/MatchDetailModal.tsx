@@ -21,6 +21,8 @@ export type DetailData = {
   summary?: string | null;
   /** e.g. "on court 2h 14m" or "24 total games" — whatever length signal we actually have for this match. */
   lengthLabel?: string | null;
+  /** Ways to actually watch — real broadcaster links when we have them, a search link otherwise. */
+  watchLinks?: { label: string; url: string }[];
 };
 
 export default function MatchDetailModal({ data, onClose }: { data: DetailData; onClose: () => void }) {
@@ -114,6 +116,27 @@ export default function MatchDetailModal({ data, onClose }: { data: DetailData; 
           )}
 
           <div className="mt-6">
+            <h3 className="headline text-xs text-[var(--text-soft)] mb-2">Watch</h3>
+            <div className="flex flex-wrap gap-2">
+              {(data.watchLinks && data.watchLinks.length > 0
+                ? data.watchLinks
+                : [{ label: "Search for where to watch", url: "" }]
+              ).map((w, i) => (
+                <a
+                  key={i}
+                  href={w.url || `https://www.google.com/search?q=${encodeURIComponent(`watch ${data.tournament} live stream`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-hover card px-4 py-2 text-sm font-semibold"
+                  style={{ background: "var(--bg-elevated-2)", color: "var(--accent)" }}
+                >
+                  📺 {w.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-5">
             <h3 className="headline text-xs text-[var(--text-soft)] mb-2">Highlights</h3>
             <a
               href={highlightsUrl}
