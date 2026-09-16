@@ -118,32 +118,21 @@ h1, h2, h3, .headline {
   100% { transform: translate(0, 0) rotate(360deg); }
 }
 
-.tennis-ball {
+.tennis-ball-drift {
   position: fixed;
-  border-radius: 999px;
-  background: radial-gradient(circle at 35% 30%, #e3ff8a, var(--accent) 60%, var(--accent-dark) 100%);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset -3px -4px 6px rgba(0, 0, 0, 0.2);
   pointer-events: none;
   z-index: 0;
   animation: ball-drift linear infinite;
 }
 
-.tennis-ball::before,
-.tennis-ball::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
-  border-radius: 50%;
-  clip-path: inset(0 45% 0 0 round 50%);
-}
-
-.tennis-ball::after {
-  transform: rotate(90deg);
+.tennis-ball-visual {
+  width: 100%;
+  height: 100%;
+  will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tennis-ball, .live-dot {
+  .tennis-ball-drift, .live-dot {
     animation: none;
   }
 }

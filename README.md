@@ -9,9 +9,10 @@ Live ATP & WTA tennis — live scores, upcoming fixtures, recent results, player
 - **Results** — recently completed matches with a link to search highlights on YouTube
 - **Players** — search any player, see ranking, hand, backhand style
 - **Rankings** — ATP & WTA top 100
-- ⭐ **Fun facts** on marquee matches (top-10 players or Grand Slam events) — curated facts first, general tennis trivia as fallback
+- 🎾 **Click any match** to open a detail view: player avatars, a bigger set-by-set score (plus the live point score), a highlights link, and a fun fact — shown for every match, not just marquee ones
+- ⭐ **Fun facts** on marquee matches (top-10 players or Grand Slam events) get a quick-access button right on the card; every match gets one in its detail view
 - 💬 **Chatbot** — rule-based assistant that can answer live-match questions, top rankings, and tennis terminology (deuce, tiebreak, break point, etc.) — no LLM/API key required
-- Floating tennis-ball decoration, professional dark sports-broadcast theme
+- Interactive floating tennis balls in the background — they drift on their own and gently scatter away from your cursor
 
 ## Data sources
 
@@ -63,6 +64,7 @@ src/
 
 ## Known gaps / things to verify after deploying
 
-- **Rankings** use ESPN's undocumented core API, which returns a paged list of `$ref` links rather than embedded data — `src/lib/espn.ts` resolves each ref in small batches. This endpoint's exact shape was not verified against a live response before shipping (the environment this was built in couldn't reach espn.com), so it's the most likely place to need a follow-up fix.
+- **Rankings** use ESPN's undocumented core API. Fixed one confirmed bug (its `$ref` links pointed at an internal `.pvt` domain that isn't publicly reachable — rewritten to `.com`), and made the list-parsing defensive against a few plausible response shapes, but the exact shape still hasn't been checked against a real response — if it's still empty, the error message now returned will say which shape assumption failed, which should make it a quick fix.
 - **Fun facts** ship with only a generic trivia pool — no curated per-player/tournament facts are seeded into the `fun_facts` table yet. Add rows there (subject_type: `player` | `tournament`, subject, fact) to have marquee matches surface something more specific.
+- **Player photos**: neither data source provides headshots, so player "faces" in the match detail view are colored initials avatars, not real photos.
 - The Live Tennis API free tier doesn't include completed-match history, so Results comes entirely from ESPN instead.

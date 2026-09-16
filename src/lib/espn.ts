@@ -114,8 +114,11 @@ export type RankingEntry = {
 };
 
 async function resolveRef<T>(ref: string): Promise<T> {
-  const res = await fetch(ref, { headers: { Accept: "application/json" } });
-  if (!res.ok) throw new Error(`ESPN ref failed: ${res.status} ${ref}`);
+  // ESPN's core API sometimes emits $ref links on its internal .pvt domain,
+  // which isn't publicly resolvable — rewrite to the public .com host.
+  const url = ref.replace("sports.core.api.espn.pvt", "sports.core.api.espn.com");
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`ESPN ref failed: ${res.status} ${url}`);
   return res.json();
 }
 
@@ -131,8 +134,29 @@ async function resolveInBatches<T, R>(items: T[], batchSize: number, fn: (item: 
 export async function getRankings(tour: "atp" | "wta", limit = 100): Promise<RankingEntry[]> {
   return cachedWithFallback(`espn:rankings:${tour}:${limit}`, 86400, async () => {
     const listUrl = `${CORE_BASE}/${tour}/rankings?limit=${limit}`;
-    const list = await resolveRef<{ items?: { $ref?: string }[] }>(listUrl);
-    const refs = (list.items ?? []).map((i) => i.$ref).filter((r): r is string => !!r);
+    const list = await resolveRef<Record<string, unknown>>(listUrl);
+
+    // The exact key holding the list of refs isn't documented and has been
+    // observed to vary — try the plausible candidates in order rather than
+    // assuming one and silently returning nothing if it's wrong.
+    const candidateArrays = [list.items, list.ranks, list.rankings, list.athletes].filter(
+      (v): v is unknown[] => Array.isArray(v) && v.length > 0
+    );
+
+    if (candidateArrays.length === 0) {
+      throw new Error(
+        `ESPN rankings response for ${tour} had no recognizable list field (checked items/ranks/rankings/athletes). Keys present: ${Object.keys(
+          list
+        ).join(", ")}`
+      );
+    }
+
+    const rawItems = candidateArrays[0] as { $ref?: string }[];
+    const refs = rawItems.map((i) => i?.$ref).filter((r): r is string => !!r);
+
+    if (refs.length === 0) {
+      throw new Error(`ESPN rankings response for ${tour} had list items but none carried a $ref to follow.`);
+    }
 
     type RankingRef = {
       current?: number;
@@ -163,6 +187,10 @@ export async function getRankings(tour: "atp" | "wta", limit = 100): Promise<Ran
       } satisfies RankingEntry;
     });
 
-    return withAthletes.filter((r) => r.rank > 0).sort((a, b) => a.rank - b.rank);
+    const final = withAthletes.filter((r) => r.rank > 0).sort((a, b) => a.rank - b.rank);
+    if (final.length === 0) {
+      throw new Error(`ESPN rankings for ${tour} resolved ${rankingRecords.length} refs but none had a usable rank.`);
+    }
+    return final;
   });
 }
