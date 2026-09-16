@@ -25,7 +25,15 @@ export type DetailData = {
   watchLinks?: { label: string; url: string }[];
 };
 
-export default function MatchDetailModal({ data, onClose }: { data: DetailData; onClose: () => void }) {
+export default function MatchDetailModal({
+  data,
+  onClose,
+  onPlayerClick,
+}: {
+  data: DetailData;
+  onClose: () => void;
+  onPlayerClick?: (name: string) => void;
+}) {
   const [fact, setFact] = useState<string | null>(null);
 
   useEffect(() => {
@@ -74,9 +82,9 @@ export default function MatchDetailModal({ data, onClose }: { data: DetailData; 
           {!data.lengthLabel && <div className="mb-4" />}
 
           <div className="flex items-center justify-between gap-3 mb-5">
-            <PlayerBlock player={data.player1} winner={data.winner === 1} />
+            <PlayerBlock player={data.player1} winner={data.winner === 1} onClick={onPlayerClick} />
             <span className="headline text-sm text-[var(--text-soft)]">VS</span>
-            <PlayerBlock player={data.player2} winner={data.winner === 2} align="right" />
+            <PlayerBlock player={data.player2} winner={data.winner === 2} align="right" onClick={onPlayerClick} />
           </div>
 
           {data.status === "upcoming" ? (
@@ -161,11 +169,35 @@ export default function MatchDetailModal({ data, onClose }: { data: DetailData; 
   );
 }
 
-function PlayerBlock({ player, winner, align = "left" }: { player: DetailPlayer; winner?: boolean; align?: "left" | "right" }) {
+function PlayerBlock({
+  player,
+  winner,
+  align = "left",
+  onClick,
+}: {
+  player: DetailPlayer;
+  winner?: boolean;
+  align?: "left" | "right";
+  onClick?: (name: string) => void;
+}) {
+  const clickable = !!onClick;
   return (
     <div className={`flex flex-col items-center gap-1.5 flex-1 ${align === "right" ? "items-center" : ""}`}>
-      <PlayerAvatar name={player.name} size={64} />
-      <p className={`text-sm text-center ${winner ? "font-bold" : "font-medium"}`}>{player.name}</p>
+      <button
+        onClick={() => onClick?.(player.name)}
+        disabled={!clickable}
+        className={clickable ? "hover:opacity-80" : ""}
+        aria-label={clickable ? `View ${player.name}'s profile` : undefined}
+      >
+        <PlayerAvatar name={player.name} size={64} />
+      </button>
+      {clickable ? (
+        <button onClick={() => onClick?.(player.name)} className={`text-sm text-center hover:underline ${winner ? "font-bold" : "font-medium"}`}>
+          {player.name}
+        </button>
+      ) : (
+        <p className={`text-sm text-center ${winner ? "font-bold" : "font-medium"}`}>{player.name}</p>
+      )}
       <p className="text-xs text-[var(--text-soft)]">
         {player.country ?? ""} {player.ranking ? `· #${player.ranking}` : ""}
       </p>

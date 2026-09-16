@@ -7,7 +7,7 @@ Live ATP & WTA tennis — live scores, upcoming fixtures, recent results, player
 - **Live** — matches in progress right now, both tours, auto-refreshing, with start time and time-on-court
 - **Upcoming** — scheduled fixtures with date/time
 - **Results** — recently completed matches with date and a "total games" length indicator, plus links to watch and a highlights search
-- **Players** — search any player, see ranking, hand, backhand style
+- **Players** — search any player, or click a player's name anywhere in the app (Live/Upcoming/Results cards, or the match detail view) to jump straight to their profile. Profile shows ranking, ranking points and movement (▲/▼), age, plays (hand), backhand style, birthday, plus whatever ratings/season stats the API returns for that player
 - **Rankings** — ATP & WTA top 100
 - 📺 **Watch links** on every match: known broadcasters (ESPN+, Tennis Channel, Sky Sports, etc.) link to their real homepage; anything else falls back to a live-stream search link
 - 🔎 **Filters & sorting** on Live/Upcoming/Results: filter by tournament type (Grand Slam / Masters / Tour), a specific tournament, or a player name; sort by date or match length, ascending or descending

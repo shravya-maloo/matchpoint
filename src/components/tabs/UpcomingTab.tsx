@@ -8,7 +8,7 @@ import { tournamentCategory, type TournamentCategory } from "@/lib/tournamentCat
 import MatchDetailModal, { type DetailData } from "@/components/MatchDetailModal";
 import MatchFilters from "@/components/MatchFilters";
 
-export default function UpcomingTab() {
+export default function UpcomingTab({ onPlayerClick }: { onPlayerClick: (name: string) => void }) {
   const [fixtures, setFixtures] = useState<Fixture[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<DetailData | null>(null);
@@ -94,8 +94,26 @@ export default function UpcomingTab() {
               <span className="text-xs text-[var(--text-soft)]">{f.round}</span>
             </div>
             <p className="text-sm text-[var(--text-soft)] mb-2">{f.tournament}</p>
-            <p className="text-sm font-medium">
-              {f.player1_name ?? "TBD"} <span className="text-[var(--text-soft)]">vs</span> {f.player2_name ?? "TBD"}
+            <p className="text-sm font-medium flex items-center gap-1 flex-wrap">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (f.player1_name) onPlayerClick(f.player1_name);
+                }}
+                className="hover:underline"
+              >
+                {f.player1_name ?? "TBD"}
+              </button>
+              <span className="text-[var(--text-soft)]">vs</span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (f.player2_name) onPlayerClick(f.player2_name);
+                }}
+                className="hover:underline"
+              >
+                {f.player2_name ?? "TBD"}
+              </button>
             </p>
             <p className="text-xs text-[var(--text-soft)] mt-1">
               {f.start_time ? formatDate(f.start_time) : "Time to be confirmed"}
@@ -104,7 +122,16 @@ export default function UpcomingTab() {
         ))}
       </div>
 
-      {selected && <MatchDetailModal data={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <MatchDetailModal
+          data={selected}
+          onClose={() => setSelected(null)}
+          onPlayerClick={(name) => {
+            setSelected(null);
+            onPlayerClick(name);
+          }}
+        />
+      )}
     </>
   );
 }

@@ -11,7 +11,7 @@ import FunFactButton from "@/components/FunFactButton";
 import MatchDetailModal, { type DetailData } from "@/components/MatchDetailModal";
 import MatchFilters from "@/components/MatchFilters";
 
-export default function LiveTab() {
+export default function LiveTab({ onPlayerClick }: { onPlayerClick: (name: string) => void }) {
   const [matches, setMatches] = useState<Match[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<DetailData | null>(null);
@@ -148,8 +148,8 @@ export default function LiveTab() {
 
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-1">
-                  <PlayerRow name={p1?.name} serving={m.score?.server === 1} />
-                  <PlayerRow name={p2?.name} serving={m.score?.server === 2} />
+                  <PlayerRow name={p1?.name} serving={m.score?.server === 1} onClick={onPlayerClick} />
+                  <PlayerRow name={p2?.name} serving={m.score?.server === 2} onClick={onPlayerClick} />
                 </div>
                 <div className="text-right">
                   <p className="font-semibold">{formatSets(m.score)}</p>
@@ -174,12 +174,21 @@ export default function LiveTab() {
         })}
       </div>
 
-      {selected && <MatchDetailModal data={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <MatchDetailModal
+          data={selected}
+          onClose={() => setSelected(null)}
+          onPlayerClick={(name) => {
+            setSelected(null);
+            onPlayerClick(name);
+          }}
+        />
+      )}
     </>
   );
 }
 
-function PlayerRow({ name, serving }: { name?: string; serving?: boolean }) {
+function PlayerRow({ name, serving, onClick }: { name?: string; serving?: boolean; onClick: (name: string) => void }) {
   return (
     <span className="text-sm font-medium flex items-center gap-1.5">
       {serving && (
@@ -187,7 +196,20 @@ function PlayerRow({ name, serving }: { name?: string; serving?: boolean }) {
           ●
         </span>
       )}
-      {name ?? "TBD"}
+      {name ? (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick(name);
+          }}
+          className="hover:underline text-left"
+          style={{ color: "inherit" }}
+        >
+          {name}
+        </button>
+      ) : (
+        "TBD"
+      )}
     </span>
   );
 }

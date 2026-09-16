@@ -22,6 +22,12 @@ type TabKey = (typeof TABS)[number]["key"];
 
 export default function Home() {
   const [tab, setTab] = useState<TabKey>("live");
+  const [playerToOpen, setPlayerToOpen] = useState<string | null>(null);
+
+  function goToPlayer(name: string) {
+    setPlayerToOpen(name);
+    setTab("players");
+  }
 
   return (
     <>
@@ -50,10 +56,15 @@ export default function Home() {
         </nav>
 
         <section className="w-full max-w-5xl">
-          {tab === "live" && <LiveTab />}
-          {tab === "upcoming" && <UpcomingTab />}
-          {tab === "results" && <ResultsTab />}
-          {tab === "players" && <PlayersTab />}
+          {tab === "live" && <LiveTab onPlayerClick={goToPlayer} />}
+          {tab === "upcoming" && <UpcomingTab onPlayerClick={goToPlayer} />}
+          {tab === "results" && <ResultsTab onPlayerClick={goToPlayer} />}
+          {tab === "players" && (
+            <PlayersTab
+              initialQuery={playerToOpen}
+              onConsumedInitialQuery={() => setPlayerToOpen(null)}
+            />
+          )}
           {tab === "rankings" && <RankingsTab />}
         </section>
       </main>

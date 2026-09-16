@@ -14,7 +14,7 @@ function totalGames(r: ResultMatch): number {
   return [...r.player1.sets, ...r.player2.sets].reduce((sum, n) => sum + n, 0);
 }
 
-export default function ResultsTab() {
+export default function ResultsTab({ onPlayerClick }: { onPlayerClick: (name: string) => void }) {
   const [results, setResults] = useState<ResultMatch[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<DetailData | null>(null);
@@ -118,8 +118,8 @@ export default function ResultsTab() {
               <p className="text-xs text-[var(--text-soft)] mb-2">
                 {formatDate(r.date)} · {totalGames(r)} total games
               </p>
-              <ResultRow name={r.player1.name} winner={r.player1.winner} sets={r.player1.sets} />
-              <ResultRow name={r.player2.name} winner={r.player2.winner} sets={r.player2.sets} />
+              <ResultRow name={r.player1.name} winner={r.player1.winner} sets={r.player1.sets} onPlayerClick={onPlayerClick} />
+              <ResultRow name={r.player2.name} winner={r.player2.winner} sets={r.player2.sets} onPlayerClick={onPlayerClick} />
               {r.summary && <p className="text-xs text-[var(--text-soft)] mt-2">{r.summary}</p>}
               <a
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent(
@@ -138,15 +138,42 @@ export default function ResultsTab() {
         })}
       </div>
 
-      {selected && <MatchDetailModal data={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <MatchDetailModal
+          data={selected}
+          onClose={() => setSelected(null)}
+          onPlayerClick={(name) => {
+            setSelected(null);
+            onPlayerClick(name);
+          }}
+        />
+      )}
     </>
   );
 }
 
-function ResultRow({ name, winner, sets }: { name: string; winner: boolean; sets: number[] }) {
+function ResultRow({
+  name,
+  winner,
+  sets,
+  onPlayerClick,
+}: {
+  name: string;
+  winner: boolean;
+  sets: number[];
+  onPlayerClick: (name: string) => void;
+}) {
   return (
     <div className="flex items-center justify-between text-sm py-0.5">
-      <span className={winner ? "font-semibold" : "text-[var(--text-soft)]"}>{name}</span>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onPlayerClick(name);
+        }}
+        className={`hover:underline text-left ${winner ? "font-semibold" : "text-[var(--text-soft)]"}`}
+      >
+        {name}
+      </button>
       <span className={`flex gap-2 ${winner ? "font-semibold" : "text-[var(--text-soft)]"}`}>
         {sets.map((s, i) => (
           <span key={i} className="w-4 text-center">
