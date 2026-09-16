@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import TennisBalls from "@/components/TennisBalls";
-import ChatWidget from "@/components/ChatWidget";
 import NewsTicker from "@/components/NewsTicker";
 import LiveTab from "@/components/tabs/LiveTab";
 import UpcomingTab from "@/components/tabs/UpcomingTab";
@@ -65,7 +64,6 @@ export default function Home() {
           )}
         </section>
       </main>
-      <ChatWidget />
     </>
   );
 }
