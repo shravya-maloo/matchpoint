@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0a1420;
+  --bg-elevated: #101f30;
+  --bg-elevated-2: #17293d;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #eef3f8;
+  --text-soft: #93a8bd;
+  --accent: #ccff33;
+  --accent-dark: #a6d928;
+  --live: #ff3b5c;
+  --atp: #4da3ff;
+  --wta: #ff6fae;
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+}
+
+body {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(204, 255, 51, 0.06), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(77, 163, 255, 0.06), transparent 40%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  min-height: 100dvh;
+}
+
+h1, h2, h3, .headline {
+  font-family: "Oswald", sans-serif;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.card-hover {
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(204, 255, 51, 0.35);
+  background: var(--bg-elevated-2);
+}
+
+.tab-btn {
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.8rem;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: #0a1420;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.tab-btn:not(.active):hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--text);
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--live);
+  display: inline-block;
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 59, 92, 0.5); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 5px rgba(255, 59, 92, 0); }
+}
+
+.tour-badge {
+  font-family: "Oswald", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.tour-badge.atp {
+  background: rgba(77, 163, 255, 0.15);
+  color: var(--atp);
+}
+
+.tour-badge.wta {
+  background: rgba(255, 111, 174, 0.15);
+  color: var(--wta);
+}
+
+@keyframes ball-drift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(18px, -22px) rotate(90deg); }
+  50% { transform: translate(-6px, -40px) rotate(180deg); }
+  75% { transform: translate(-24px, -14px) rotate(270deg); }
+  100% { transform: translate(0, 0) rotate(360deg); }
+}
+
+.tennis-ball {
+  position: fixed;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #e3ff8a, var(--accent) 60%, var(--accent-dark) 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset -3px -4px 6px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  z-index: 0;
+  animation: ball-drift linear infinite;
+}
+
+.tennis-ball::before,
+.tennis-ball::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  clip-path: inset(0 45% 0 0 round 50%);
+}
+
+.tennis-ball::after {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tennis-ball, .live-dot {
+    animation: none;
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: #0a1420;
+}
+
+* {
+  scrollbar-color: var(--accent-dark) var(--bg-elevated);
+}
