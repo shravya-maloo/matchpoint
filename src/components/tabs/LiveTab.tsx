@@ -1,16 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Match } from "livetennisapi";
 import { formatSets, formatCurrentGame, setsPerPlayer } from "@/lib/format";
+import { formatDate, elapsedSince, elapsedMinutes } from "@/lib/dates";
+import { tournamentCategory, type TournamentCategory } from "@/lib/tournamentCategory";
 import { isMarqueeMatch } from "@/lib/marquee";
 import FunFactButton from "@/components/FunFactButton";
 import MatchDetailModal, { type DetailData } from "@/components/MatchDetailModal";
+import MatchFilters from "@/components/MatchFilters";
 
 export default function LiveTab() {
   const [matches, setMatches] = useState<Match[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<DetailData | null>(null);
+
+  const [category, setCategory] = useState<TournamentCategory | "all">("all");
+  const [tournament, setTournament] = useState("all");
+  const [playerQuery, setPlayerQuery] = useState("");
+  const [sortField, setSortField] = useState("date");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
     let cancelled = false;
@@ -33,20 +42,69 @@ export default function LiveTab() {
     };
   }, []);
 
+  const tournaments = useMemo(
+    () => Array.from(new Set((matches ?? []).map((m) => m.tournament).filter((t): t is string => !!t))).sort(),
+    [matches]
+  );
+
+  const filtered = useMemo(() => {
+    if (!matches) return [];
+    let list = matches;
+    if (category !== "all") list = list.filter((m) => tournamentCategory(m.tournament) === category);
+    if (tournament !== "all") list = list.filter((m) => m.tournament === tournament);
+    if (playerQuery.trim()) {
+      const q = playerQuery.toLowerCase();
+      list = list.filter(
+        (m) => m.players?.p1?.name?.toLowerCase().includes(q) || m.players?.p2?.name?.toLowerCase().includes(q)
+      );
+    }
+    const sorted = [...list].sort((a, b) => {
+      let diff = 0;
+      if (sortField === "duration") {
+        diff = elapsedMinutes(a.scheduled_time) - elapsedMinutes(b.scheduled_time);
+      } else {
+        diff = new Date(a.scheduled_time ?? 0).getTime() - new Date(b.scheduled_time ?? 0).getTime();
+      }
+      return sortDir === "asc" ? diff : -diff;
+    });
+    return sorted;
+  }, [matches, category, tournament, playerQuery, sortField, sortDir]);
+
   if (error) return <p className="text-[var(--text-soft)] text-sm">{error}</p>;
   if (matches === null) return <p className="text-[var(--text-soft)] text-sm">Loading live matches…</p>;
   if (matches.length === 0) return <p className="text-[var(--text-soft)] text-sm">No matches live right now.</p>;
 
   return (
     <>
+      <MatchFilters
+        tournaments={tournaments}
+        category={category}
+        onCategoryChange={setCategory}
+        tournament={tournament}
+        onTournamentChange={setTournament}
+        playerQuery={playerQuery}
+        onPlayerQueryChange={setPlayerQuery}
+        sortField={sortField}
+        onSortFieldChange={setSortField}
+        sortOptions={[
+          { value: "date", label: "Start time" },
+          { value: "duration", label: "Time on court" },
+        ]}
+        sortDir={sortDir}
+        onToggleSortDir={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+      />
+
+      {filtered.length === 0 && <p className="text-[var(--text-soft)] text-sm">No matches match those filters.</p>}
+
       <div className="grid gap-3 sm:grid-cols-2">
-        {matches.map((m) => {
+        {filtered.map((m) => {
           const p1 = m.players?.p1;
           const p2 = m.players?.p2;
           const marquee = isMarqueeMatch({ ranking1: p1?.ranking, ranking2: p2?.ranking, tournament: m.tournament });
           const highlightsUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
             `${p1?.name ?? ""} vs ${p2?.name ?? ""} ${m.tournament ?? ""} highlights`
           )}`;
+          const elapsed = elapsedSince(m.scheduled_time);
 
           return (
             <div
@@ -65,6 +123,7 @@ export default function LiveTab() {
                   perSet2,
                   currentGame: formatCurrentGame(m.score),
                   winner: m.winner ?? null,
+                  lengthLabel: elapsed ? `Started ${formatDate(m.scheduled_time)} · on court ${elapsed}` : formatDate(m.scheduled_time),
                 });
               }}
             >
@@ -79,7 +138,11 @@ export default function LiveTab() {
                 )}
               </div>
 
-              <p className="text-sm text-[var(--text-soft)] mb-2">{m.tournament}</p>
+              <p className="text-sm text-[var(--text-soft)] mb-1">{m.tournament}</p>
+              <p className="text-xs text-[var(--text-soft)] mb-2">
+                {formatDate(m.scheduled_time)}
+                {elapsed && <span> · on court {elapsed}</span>}
+              </p>
 
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-1">

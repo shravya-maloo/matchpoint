@@ -4,14 +4,16 @@ Live ATP & WTA tennis — live scores, upcoming fixtures, recent results, player
 
 ## Features
 
-- **Live** — matches in progress right now, both tours, auto-refreshing
-- **Upcoming** — scheduled fixtures
-- **Results** — recently completed matches with a link to search highlights on YouTube
+- **Live** — matches in progress right now, both tours, auto-refreshing, with start time and time-on-court
+- **Upcoming** — scheduled fixtures with date/time
+- **Results** — recently completed matches with date and a "total games" length indicator, plus a link to search highlights on YouTube
 - **Players** — search any player, see ranking, hand, backhand style
 - **Rankings** — ATP & WTA top 100
+- 🔎 **Filters & sorting** on Live/Upcoming/Results: filter by tournament type (Grand Slam / Masters / Tour), a specific tournament, or a player name; sort by date or match length, ascending or descending
+- 📰 **Live updates ticker** scrolling at the top of the page
 - 🎾 **Click any match** to open a detail view: player avatars, a bigger set-by-set score (plus the live point score), a highlights link, and a fun fact — shown for every match, not just marquee ones
 - ⭐ **Fun facts** on marquee matches (top-10 players or Grand Slam events) get a quick-access button right on the card; every match gets one in its detail view
-- 💬 **Chatbot** — rule-based assistant that can answer live-match questions, top rankings, and tennis terminology (deuce, tiebreak, break point, etc.) — no LLM/API key required
+- 💬 **Chatbot** — rule-based assistant covering live scores, upcoming fixtures, rankings, player lookups, and a broad tennis glossary (deuce, tiebreak, fault, bagel, walkover, seeding, and more) — no LLM/API key required
 - Interactive floating tennis balls in the background — they drift on their own and gently scatter away from your cursor
 
 ## Data sources
@@ -67,4 +69,5 @@ src/
 - **Rankings** use ESPN's undocumented core API. Fixed one confirmed bug (its `$ref` links pointed at an internal `.pvt` domain that isn't publicly reachable — rewritten to `.com`), and made the list-parsing defensive against a few plausible response shapes, but the exact shape still hasn't been checked against a real response — if it's still empty, the error message now returned will say which shape assumption failed, which should make it a quick fix.
 - **Fun facts** ship with only a generic trivia pool — no curated per-player/tournament facts are seeded into the `fun_facts` table yet. Add rows there (subject_type: `player` | `tournament`, subject, fact) to have marquee matches surface something more specific.
 - **Player photos**: neither data source provides headshots, so player "faces" in the match detail view are colored initials avatars, not real photos.
+- **Match duration**: neither data source provides a true duration field. Live matches show genuine elapsed time (now minus the match's scheduled start). Completed matches (Results) instead show "total games played" as an honest, derivable proxy for match length — it's labeled as such rather than presented as a real duration.
 - The Live Tennis API free tier doesn't include completed-match history, so Results comes entirely from ESPN instead.

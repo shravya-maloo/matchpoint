@@ -1,13 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Fixture } from "livetennisapi";
+import { formatDate } from "@/lib/dates";
+import { tournamentCategory, type TournamentCategory } from "@/lib/tournamentCategory";
 import MatchDetailModal, { type DetailData } from "@/components/MatchDetailModal";
+import MatchFilters from "@/components/MatchFilters";
 
 export default function UpcomingTab() {
   const [fixtures, setFixtures] = useState<Fixture[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<DetailData | null>(null);
+
+  const [category, setCategory] = useState<TournamentCategory | "all">("all");
+  const [tournament, setTournament] = useState("all");
+  const [playerQuery, setPlayerQuery] = useState("");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   useEffect(() => {
     fetch("/api/upcoming")
@@ -16,14 +24,54 @@ export default function UpcomingTab() {
       .catch(() => setError("Failed to load upcoming matches"));
   }, []);
 
+  const tournaments = useMemo(
+    () => Array.from(new Set((fixtures ?? []).map((f) => f.tournament).filter((t): t is string => !!t))).sort(),
+    [fixtures]
+  );
+
+  const filtered = useMemo(() => {
+    if (!fixtures) return [];
+    let list = fixtures;
+    if (category !== "all") list = list.filter((f) => tournamentCategory(f.tournament) === category);
+    if (tournament !== "all") list = list.filter((f) => f.tournament === tournament);
+    if (playerQuery.trim()) {
+      const q = playerQuery.toLowerCase();
+      list = list.filter(
+        (f) => f.player1_name?.toLowerCase().includes(q) || f.player2_name?.toLowerCase().includes(q)
+      );
+    }
+    const sorted = [...list].sort((a, b) => {
+      const diff = new Date(a.start_time ?? a.event_date ?? 0).getTime() - new Date(b.start_time ?? b.event_date ?? 0).getTime();
+      return sortDir === "asc" ? diff : -diff;
+    });
+    return sorted;
+  }, [fixtures, category, tournament, playerQuery, sortDir]);
+
   if (error) return <p className="text-[var(--text-soft)] text-sm">{error}</p>;
   if (fixtures === null) return <p className="text-[var(--text-soft)] text-sm">Loading fixtures…</p>;
   if (fixtures.length === 0) return <p className="text-[var(--text-soft)] text-sm">No upcoming fixtures found.</p>;
 
   return (
     <>
+      <MatchFilters
+        tournaments={tournaments}
+        category={category}
+        onCategoryChange={setCategory}
+        tournament={tournament}
+        onTournamentChange={setTournament}
+        playerQuery={playerQuery}
+        onPlayerQueryChange={setPlayerQuery}
+        sortField="date"
+        onSortFieldChange={() => {}}
+        sortOptions={[{ value: "date", label: "Start time (earliest/latest)" }]}
+        sortDir={sortDir}
+        onToggleSortDir={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+      />
+
+      {filtered.length === 0 && <p className="text-[var(--text-soft)] text-sm">No matches match those filters.</p>}
+
       <div className="grid gap-3 sm:grid-cols-2">
-        {fixtures.map((f) => (
+        {filtered.map((f) => (
           <div
             key={f.id}
             className="card card-hover p-4 cursor-pointer"
@@ -47,17 +95,9 @@ export default function UpcomingTab() {
             <p className="text-sm font-medium">
               {f.player1_name ?? "TBD"} <span className="text-[var(--text-soft)]">vs</span> {f.player2_name ?? "TBD"}
             </p>
-            {f.start_time && (
-              <p className="text-xs text-[var(--text-soft)] mt-1">
-                {new Date(f.start_time).toLocaleString(undefined, {
-                  weekday: "short",
-                  month: "short",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                })}
-              </p>
-            )}
+            <p className="text-xs text-[var(--text-soft)] mt-1">
+              {f.start_time ? formatDate(f.start_time) : "Time to be confirmed"}
+            </p>
           </div>
         ))}
       </div>

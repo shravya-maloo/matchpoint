@@ -19,6 +19,8 @@ export type DetailData = {
   winner?: 1 | 2 | null;
   startTime?: string | null;
   summary?: string | null;
+  /** e.g. "on court 2h 14m" or "24 total games" — whatever length signal we actually have for this match. */
+  lengthLabel?: string | null;
 };
 
 export default function MatchDetailModal({ data, onClose }: { data: DetailData; onClose: () => void }) {
@@ -65,7 +67,9 @@ export default function MatchDetailModal({ data, onClose }: { data: DetailData; 
         </div>
 
         <div className="px-5 py-5">
-          <p className="text-sm text-[var(--text-soft)] mb-4">{data.tournament}</p>
+          <p className="text-sm text-[var(--text-soft)] mb-1">{data.tournament}</p>
+          {data.lengthLabel && <p className="text-xs text-[var(--text-soft)] mb-4">{data.lengthLabel}</p>}
+          {!data.lengthLabel && <div className="mb-4" />}
 
           <div className="flex items-center justify-between gap-3 mb-5">
             <PlayerBlock player={data.player1} winner={data.winner === 1} />

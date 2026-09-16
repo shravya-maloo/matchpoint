@@ -131,7 +131,34 @@ h1, h2, h3, .headline {
   will-change: transform;
 }
 
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 40s linear infinite;
+}
+
+.ticker-item {
+  padding: 0 2rem;
+  white-space: nowrap;
+  position: relative;
+}
+
+.ticker-item::after {
+  content: "•";
+  position: absolute;
+  right: -0.1rem;
+  color: var(--accent);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .ticker-track {
+    animation: none;
+  }
   .tennis-ball-drift, .live-dot {
     animation: none;
   }
