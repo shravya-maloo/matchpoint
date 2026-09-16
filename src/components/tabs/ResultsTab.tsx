@@ -10,9 +10,27 @@ import { watchLinkFor } from "@/lib/watch";
 import MatchDetailModal, { type DetailData } from "@/components/MatchDetailModal";
 import MatchFilters from "@/components/MatchFilters";
 import DateRangePicker from "@/components/DateRangePicker";
+import ShareButton from "@/components/ShareButton";
+import type { ShareMatchData } from "@/lib/shareCard";
 
 function totalGames(r: ResultMatch): number {
   return [...r.player1.sets, ...r.player2.sets].reduce((sum, n) => sum + n, 0);
+}
+
+function shareDataFor(r: ResultMatch): ShareMatchData {
+  return {
+    t: r.tour,
+    tn: r.tournament,
+    r: r.round,
+    d: r.date,
+    p1: r.player1.name,
+    c1: r.player1.country,
+    p2: r.player2.name,
+    c2: r.player2.country,
+    s1: r.player1.sets,
+    s2: r.player2.sets,
+    w: r.player1.winner ? 1 : r.player2.winner ? 2 : null,
+  };
 }
 
 function ymd(d: Date): string {
@@ -150,18 +168,21 @@ export default function ResultsTab({ onPlayerClick }: { onPlayerClick: (name: st
                   <ResultRow name={r.player1.name} winner={r.player1.winner} sets={r.player1.sets} onPlayerClick={onPlayerClick} />
                   <ResultRow name={r.player2.name} winner={r.player2.winner} sets={r.player2.sets} onPlayerClick={onPlayerClick} />
                   {r.summary && <p className="text-xs text-[var(--text-soft)] mt-2">{r.summary}</p>}
-                  <a
-                    href={`https://www.youtube.com/results?search_query=${encodeURIComponent(
-                      `${r.player1.name} vs ${r.player2.name} ${r.tournament} highlights`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-xs font-semibold mt-2 inline-block"
-                    style={{ color: "var(--accent)" }}
-                  >
-                    ▶ Watch highlights
-                  </a>
+                  <div className="flex items-center justify-between mt-2">
+                    <a
+                      href={`https://www.youtube.com/results?search_query=${encodeURIComponent(
+                        `${r.player1.name} vs ${r.player2.name} ${r.tournament} highlights`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-xs font-semibold inline-block"
+                      style={{ color: "var(--accent)" }}
+                    >
+                      ▶ Watch highlights
+                    </a>
+                    <ShareButton data={shareDataFor(r)} />
+                  </div>
                 </div>
               );
             })}
