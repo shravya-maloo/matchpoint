@@ -182,7 +182,11 @@ export default function LiveTab() {
 function PlayerRow({ name, serving }: { name?: string; serving?: boolean }) {
   return (
     <span className="text-sm font-medium flex items-center gap-1.5">
-      {serving && <span style={{ color: "var(--accent)" }}>●</span>}
+      {serving && (
+        <span style={{ color: "var(--accent)" }} title="Currently serving" aria-label="Currently serving">
+          ●
+        </span>
+      )}
       {name ?? "TBD"}
     </span>
   );
