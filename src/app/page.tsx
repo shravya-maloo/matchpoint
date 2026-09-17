@@ -52,7 +52,7 @@ export default function Home() {
             Match<span style={{ color: "var(--accent)" }}>Point</span>
           </h1>
           <p className="text-[var(--text-soft)] text-sm max-w-md">
-            Live ATP &amp; WTA scores, fixtures, results, and players — all in one place.
+            Live ATP &amp; WTA scores, fixtures, results, and players, all in one place.
           </p>
         </header>
 

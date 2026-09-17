@@ -74,12 +74,12 @@ export default function DateRangePicker({
 
       {inverted && (
         <p className="text-xs" style={{ color: "var(--accent)" }}>
-          The start date is after the end date — pick an earlier start date.
+          The start date is after the end date. Pick an earlier start date.
         </p>
       )}
       {!inverted && tooWide && (
         <p className="text-xs" style={{ color: "var(--accent)" }}>
-          That range is {rangeDays} days — please pick {MAX_RANGE_DAYS} days or fewer.
+          That range is {rangeDays} days. Please pick {MAX_RANGE_DAYS} days or fewer.
         </p>
       )}
     </div>

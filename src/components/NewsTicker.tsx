@@ -16,7 +16,7 @@ export default function NewsTicker() {
         if (cancelled) return;
         const matches: Match[] = data.matches ?? [];
         if (matches.length === 0) {
-          setItems(["No matches live right now — check the Upcoming tab for what's next."]);
+          setItems(["No matches live right now. Check the Upcoming tab for what's next."]);
           return;
         }
         setItems(
@@ -24,7 +24,7 @@ export default function NewsTicker() {
             const p1 = m.players?.p1?.name ?? "?";
             const p2 = m.players?.p2?.name ?? "?";
             const sets = formatSets(m.score);
-            return `🔴 LIVE — ${m.tournament ?? "Tour"}: ${p1} vs ${p2}${sets ? ` (${sets})` : ""}`;
+            return `🔴 LIVE · ${m.tournament ?? "Tour"}: ${p1} vs ${p2}${sets ? ` (${sets})` : ""}`;
           })
         );
       } catch {

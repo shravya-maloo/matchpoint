@@ -38,7 +38,7 @@ function PlayerPicker({
         <PlayerAvatar name={selected.name} size={56} />
         <p className="font-semibold text-sm">{selected.name}</p>
         <p className="text-xs text-[var(--text-soft)]">
-          {selected.country ?? "—"} {selected.ranking ? `· #${selected.ranking}` : ""}
+          {selected.country ?? "-"} {selected.ranking ? `· #${selected.ranking}` : ""}
         </p>
         <button onClick={() => onSelect(null as unknown as Player)} className="text-xs text-[var(--text-soft)] hover:underline">
           Change
@@ -92,11 +92,11 @@ function CompareStat({ label, v1, v2, higherIsBetter }: { label: string; v1: str
   return (
     <div className="grid grid-cols-3 items-center py-2 text-sm" style={{ borderBottom: "1px solid var(--border)" }}>
       <span className={`text-center ${winner === 1 ? "font-bold" : ""}`} style={{ color: winner === 1 ? "var(--accent)" : undefined }}>
-        {v1 ?? "—"}
+        {v1 ?? "-"}
       </span>
       <span className="text-center text-xs text-[var(--text-soft)] uppercase tracking-wide">{label}</span>
       <span className={`text-center ${winner === 2 ? "font-bold" : ""}`} style={{ color: winner === 2 ? "var(--accent)" : undefined }}>
-        {v2 ?? "—"}
+        {v2 ?? "-"}
       </span>
     </div>
   );
@@ -155,7 +155,7 @@ export default function CompareTab() {
       {p1 && p2 && (
         <div className="card p-5">
           <p className="text-xs text-[var(--text-soft)] uppercase tracking-wide mb-3">
-            Recent head-to-head (last ~3 months of results — not a full career record)
+            Recent head-to-head (last ~3 months of results, not a full career record)
           </p>
           {loadingH2h && <p className="text-sm text-[var(--text-soft)]">Loading…</p>}
           {!loadingH2h && h2h && h2h.matches.length === 0 && (
@@ -164,7 +164,7 @@ export default function CompareTab() {
           {!loadingH2h && h2h && h2h.matches.length > 0 && (
             <>
               <p className="text-center text-2xl font-bold mb-3">
-                {h2h.player1Wins} — {h2h.player2Wins}
+                {h2h.player1Wins} - {h2h.player2Wins}
               </p>
               <div className="flex flex-col gap-2">
                 {h2h.matches.map((m) => (

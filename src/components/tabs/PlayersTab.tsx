@@ -164,10 +164,10 @@ export default function PlayersTab({
 
           <div className="grid grid-cols-2 gap-3 text-sm">
             <Stat label="Ranking" value={selected.ranking ? `#${selected.ranking}` : "Unranked"} />
-            <Stat label="Ranking points" value={selected.ranking_points ?? "—"} />
-            <Stat label="Plays" value={selected.hand === "L" ? "Left-handed" : selected.hand === "R" ? "Right-handed" : "—"} />
-            <Stat label="Backhand" value={selected.backhand === 1 ? "One-handed" : selected.backhand === 2 ? "Two-handed" : "—"} />
-            <Stat label="Birthday" value={selected.birthday ? new Date(selected.birthday).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }) : "—"} />
+            <Stat label="Ranking points" value={selected.ranking_points ?? "-"} />
+            <Stat label="Plays" value={selected.hand === "L" ? "Left-handed" : selected.hand === "R" ? "Right-handed" : "-"} />
+            <Stat label="Backhand" value={selected.backhand === 1 ? "One-handed" : selected.backhand === 2 ? "Two-handed" : "-"} />
+            <Stat label="Birthday" value={selected.birthday ? new Date(selected.birthday).toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }) : "-"} />
           </div>
 
           <StatsBlock title="Ratings" data={selected.stats?.ratings} />
@@ -185,7 +185,7 @@ export default function PlayersTab({
             <button key={p.id} onClick={() => openPlayer(p)} className="card card-hover p-3 text-left">
               <p className="font-medium text-sm">{p.name}</p>
               <p className="text-xs text-[var(--text-soft)]">
-                {p.country ?? "—"} {p.ranking ? `· #${p.ranking}` : ""}
+                {p.country ?? "-"} {p.ranking ? `· #${p.ranking}` : ""}
               </p>
             </button>
           ))}

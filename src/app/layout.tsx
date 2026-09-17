@@ -9,7 +9,7 @@ import "@fontsource/inter/700.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MatchPoint — Live Tennis Scores & Players",
+  title: "MatchPoint: Live Tennis Scores & Players",
   description:
     "Live ATP and WTA tennis scores, upcoming fixtures, results, and player profiles, all in one place.",
 };

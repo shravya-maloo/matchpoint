@@ -6,7 +6,7 @@ const SECTIONS: { icon: string; title: string; body: string[] }[] = [
     title: "Live",
     body: [
       "Matches currently in progress, both ATP and WTA, refreshing automatically every 25 seconds.",
-      "A yellow dot next to a player's name means they're currently serving — hover it for a tooltip.",
+      "A yellow dot next to a player's name means they're currently serving; hover it for a tooltip.",
       "Click anywhere on a match card to open a bigger detail view with player info, a larger score, a highlights link, and a fun fact.",
       "Use the filter bar to narrow by tournament type, a specific tournament, or a player's name, and sort by start time or how long a match has been on court.",
     ],
@@ -21,8 +21,8 @@ const SECTIONS: { icon: string; title: string; body: string[] }[] = [
     title: "Results",
     body: [
       "Completed matches. Use the date-range picker at the top (presets or a custom range, up to 90 days) to search further back than the default.",
-      "Each match shows a 'total games played' figure as a rough sense of how long it went — the underlying data doesn't include an exact match duration, so this is an honest stand-in rather than a real clock time.",
-      "The 📈 dots next to a player's name are their last-5 match form (green W, red L) — hover for the exact record.",
+      "Each match shows a 'total games played' figure as a rough sense of how long it went. The underlying data doesn't include an exact match duration, so this is an honest stand-in rather than a real clock time.",
+      "The 📈 dots next to a player's name are their last-5 match form (green W, red L); hover for the exact record.",
       "↗ Share generates a link with a preview image you can post anywhere; the image is generated on the fly from that match's real result.",
       "▶ Watch highlights searches YouTube for that match. Where MatchPoint has real broadcaster info, you'll also see a direct link to where it aired.",
     ],
@@ -31,7 +31,7 @@ const SECTIONS: { icon: string; title: string; body: string[] }[] = [
     icon: "👤",
     title: "Players",
     body: [
-      "Search any player by name. You can also click a player's name anywhere else in the app — a match card, the compare tool — to jump straight to their profile here.",
+      "Search any player by name. You can also click a player's name anywhere else in the app, like a match card or the compare tool, to jump straight to their profile here.",
       "Profile shows current ranking (with a ▲/▼ movement arrow), age, playing hand, backhand style, recent form, and whatever season stats the data source has for that player.",
     ],
   },
@@ -39,15 +39,15 @@ const SECTIONS: { icon: string; title: string; body: string[] }[] = [
     icon: "⚖️",
     title: "Compare",
     body: [
-      "Pick any two players to see a side-by-side comparison — ranking, points, country, hand, backhand — with the better value highlighted where that's meaningful.",
-      "Below that, their head-to-head record and match list — but only within roughly the last 3 months, since the data source doesn't offer full career history.",
+      "Pick any two players to see a side-by-side comparison (ranking, points, country, hand, backhand) with the better value highlighted where that's meaningful.",
+      "Below that, their head-to-head record and match list, but only within roughly the last 3 months, since the data source doesn't offer full career history.",
     ],
   },
   {
     icon: "⭐",
     title: "Fun facts",
     body: [
-      "Matches involving a top-10 player or at a Grand Slam get a quick '⭐ Fun fact' button right on the card. Every match — marquee or not — also gets one automatically inside its detail view.",
+      "Matches involving a top-10 player or at a Grand Slam get a quick '⭐ Fun fact' button right on the card. Every match, marquee or not, also gets one automatically inside its detail view.",
     ],
   },
 ];

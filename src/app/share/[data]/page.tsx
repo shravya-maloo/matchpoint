@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ data: str
   const data = decodeShareData(encoded);
   if (!data) return { title: "MatchPoint" };
 
-  const title = `${titleFor(data)} — MatchPoint`;
+  const title = `${titleFor(data)} · MatchPoint`;
   const description = `${data.tn} · ${data.r} · ${formatSetScore(data.s1, data.s2)}`;
 
   return {

@@ -153,7 +153,7 @@ export async function getResultsInRange(fromStr: string, toStr: string): Promise
 
   const rangeDays = Math.round((to.getTime() - from.getTime()) / 86400000) + 1;
   if (rangeDays > MAX_RANGE_DAYS) {
-    throw new Error(`Date range too wide — max ${MAX_RANGE_DAYS} days, got ${rangeDays}.`);
+    throw new Error(`Date range too wide. Max ${MAX_RANGE_DAYS} days, got ${rangeDays}.`);
   }
 
   const daysSinceRangeEnd = Math.floor((Date.now() - to.getTime()) / 86400000);

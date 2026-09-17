@@ -7,13 +7,13 @@ import { and, eq, ilike, or } from "drizzle-orm";
 // never at risk of going stale or wrong.
 const GENERIC_FACTS = [
   "The Wimbledon Championships is the only Grand Slam still played on grass.",
-  "A tennis match has no game clock — it ends only when the last point is won, which is why some matches have lasted over 11 hours.",
+  "A tennis match has no game clock; it ends only when the last point is won, which is why some matches have lasted over 11 hours.",
   "The term \"love\" for zero is thought to come from the French \"l'oeuf\" (the egg), for its round shape.",
   "The fastest recorded competitive tennis serve was in the 260 km/h (163 mph) range.",
   "Yellow tennis balls only became standard in the 1970s, after research found them more visible on television.",
   "The four Grand Slam tournaments are played on three different surfaces: clay (French Open), grass (Wimbledon), and hard court (Australian & US Open).",
-  "Tiebreaks weren't introduced to Grand Slam tennis until the 1970s — before that, sets could theoretically go on forever.",
-  "A \"golden set\" — winning a set 6-0 without losing a single point — has happened only a handful of times in professional history.",
+  "Tiebreaks weren't introduced to Grand Slam tennis until the 1970s; before that, sets could theoretically go on forever.",
+  "A \"golden set\" (winning a set 6-0 without losing a single point) has happened only a handful of times in professional history.",
   "Roland Garros, the French Open venue, is named after a World War I aviator, not a tennis player.",
   "Players switch ends of the court every odd game to offset any advantage from sun, wind, or court conditions.",
 ];

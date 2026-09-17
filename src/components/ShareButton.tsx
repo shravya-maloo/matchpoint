@@ -17,8 +17,8 @@ export default function ShareButton({ data, className }: { data: ShareMatchData;
     const loserName = data.w === 1 ? data.p2 : data.w === 2 ? data.p1 : null;
     const text =
       winnerName && loserName
-        ? `${winnerName} def. ${loserName} ${formatSetScore(data.s1, data.s2)} — ${data.tn}`
-        : `${data.p1} vs ${data.p2} — ${data.tn}`;
+        ? `${winnerName} def. ${loserName} ${formatSetScore(data.s1, data.s2)} · ${data.tn}`
+        : `${data.p1} vs ${data.p2} · ${data.tn}`;
 
     if (typeof navigator !== "undefined" && navigator.share) {
       try {
