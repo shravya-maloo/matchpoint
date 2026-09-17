@@ -40,8 +40,8 @@ export default function MatchFilters({
         value={playerQuery}
         onChange={(e) => onPlayerQueryChange(e.target.value)}
         placeholder="Filter by player…"
-        className={selectClass}
-        style={{ ...selectStyle, minWidth: 140 }}
+        className={`${selectClass} flex-1 min-w-[120px] sm:flex-initial`}
+        style={selectStyle}
       />
 
       <select
@@ -70,11 +70,11 @@ export default function MatchFilters({
         ))}
       </select>
 
-      <div className="flex items-center gap-1 ml-auto">
+      <div className="flex items-center gap-1 w-full sm:w-auto sm:ml-auto">
         <select
           value={sortField}
           onChange={(e) => onSortFieldChange(e.target.value)}
-          className={selectClass}
+          className={`${selectClass} flex-1 sm:flex-initial`}
           style={selectStyle}
         >
           {sortOptions.map((o) => (

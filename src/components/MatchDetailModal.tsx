@@ -54,36 +54,36 @@ export default function MatchDetailModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4"
       style={{ background: "rgba(5, 10, 16, 0.75)" }}
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="card w-full max-w-xl my-6 overflow-hidden"
+        className="card w-full max-w-xl max-h-[88vh] overflow-hidden flex flex-col"
         style={{ background: "var(--bg-elevated)" }}
       >
         <div
-          className="flex items-center justify-between px-5 py-4"
+          className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 shrink-0"
           style={{ borderBottom: "1px solid var(--border)" }}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <span className={`tour-badge ${data.tour}`}>{data.tour.toUpperCase()}</span>
-            {data.round && <span className="text-xs text-[var(--text-soft)]">{data.round}</span>}
+            {data.round && <span className="text-xs text-[var(--text-soft)] truncate">{data.round}</span>}
           </div>
-          <button onClick={onClose} className="text-[var(--text-soft)] hover:text-[var(--text)] text-lg" aria-label="Close">
+          <button onClick={onClose} className="text-[var(--text-soft)] hover:text-[var(--text)] text-lg shrink-0 ml-2" aria-label="Close">
             ✕
           </button>
         </div>
 
-        <div className="px-5 py-5">
+        <div className="px-4 sm:px-5 py-4 sm:py-5 overflow-y-auto">
           <p className="text-sm text-[var(--text-soft)] mb-1">{data.tournament}</p>
           {data.lengthLabel && <p className="text-xs text-[var(--text-soft)] mb-4">{data.lengthLabel}</p>}
           {!data.lengthLabel && <div className="mb-4" />}
 
-          <div className="flex items-center justify-between gap-3 mb-5">
+          <div className="flex items-center justify-between gap-2 sm:gap-3 mb-5">
             <PlayerBlock player={data.player1} winner={data.winner === 1} onClick={onPlayerClick} />
-            <span className="headline text-sm text-[var(--text-soft)]">VS</span>
+            <span className="headline text-xs sm:text-sm text-[var(--text-soft)] shrink-0">VS</span>
             <PlayerBlock player={data.player2} winner={data.winner === 2} align="right" onClick={onPlayerClick} />
           </div>
 

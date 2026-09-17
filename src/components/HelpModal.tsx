@@ -55,17 +55,17 @@ const SECTIONS: { icon: string; title: string; body: string[] }[] = [
 export default function HelpModal({ onClose }: { onClose: () => void }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4"
       style={{ background: "rgba(5, 10, 16, 0.75)" }}
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="card w-full max-w-xl my-6 overflow-hidden"
+        className="card w-full max-w-xl max-h-[88vh] overflow-hidden flex flex-col"
         style={{ background: "var(--bg-elevated)" }}
       >
         <div
-          className="flex items-center justify-between px-5 py-4"
+          className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 shrink-0"
           style={{ borderBottom: "1px solid var(--border)" }}
         >
           <span className="headline text-sm">How MatchPoint works</span>
@@ -74,7 +74,7 @@ export default function HelpModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <div className="px-5 py-5 flex flex-col gap-5">
+        <div className="px-4 sm:px-5 py-4 sm:py-5 flex flex-col gap-5 overflow-y-auto">
           <p className="text-sm text-[var(--text-soft)]">
             MatchPoint tracks live ATP &amp; WTA tennis. Here's what each tab does and where the less obvious features are hiding.
           </p>

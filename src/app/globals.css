@@ -76,6 +76,15 @@ h1, h2, h3, .headline {
   color: var(--text);
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .live-dot {
   width: 8px;
   height: 8px;

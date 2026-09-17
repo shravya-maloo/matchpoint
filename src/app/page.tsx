@@ -56,12 +56,12 @@ export default function Home() {
           </p>
         </header>
 
-        <nav className="w-full max-w-5xl flex flex-wrap justify-center gap-2 mb-8">
+        <nav className="w-full max-w-5xl flex justify-start sm:justify-center gap-2 mb-8 overflow-x-auto no-scrollbar px-1 -mx-1">
           {TABS.map((t) => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`tab-btn relative ${tab === t.key ? "active" : ""}`}
+              className={`tab-btn relative shrink-0 ${tab === t.key ? "active" : ""}`}
               style={tab === t.key ? { background: "transparent", color: "#0a1420" } : undefined}
             >
               {tab === t.key && (
