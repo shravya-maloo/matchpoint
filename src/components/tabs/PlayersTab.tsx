@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { Player } from "livetennisapi";
+import FormIndicator from "@/components/FormIndicator";
+import type { FormResult } from "@/lib/form";
 
 function prettifyKey(key: string): string {
   const spaced = key.replace(/_/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2");
@@ -52,6 +54,7 @@ export default function PlayersTab({
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Player[] | null>(null);
   const [selected, setSelected] = useState<Player | null>(null);
+  const [form, setForm] = useState<FormResult[] | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
   async function runSearch(q: string) {
@@ -69,17 +72,29 @@ export default function PlayersTab({
   }
 
   async function openPlayer(p: Player) {
+    setForm(undefined);
     if (!p.id) {
       setSelected(p);
-      return;
+    } else {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/players/${p.id}`);
+        const data = await res.json();
+        setSelected(data.player ?? p);
+      } finally {
+        setLoading(false);
+      }
     }
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/players/${p.id}`);
-      const data = await res.json();
-      setSelected(data.player ?? p);
-    } finally {
-      setLoading(false);
+    if (p.name) {
+      const playerName = p.name;
+      fetch("/api/players/form-batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ names: [playerName] }),
+      })
+        .then((r) => r.json())
+        .then((d) => setForm(d.form?.[playerName]))
+        .catch(() => {});
     }
   }
 
@@ -133,6 +148,12 @@ export default function PlayersTab({
                 {age != null && ` · Age ${age}`}
                 {selected.is_doubles_team && " · Doubles team"}
               </p>
+              {form && form.length > 0 && (
+                <div className="flex items-center gap-1.5 mb-3">
+                  <span className="text-xs text-[var(--text-soft)] uppercase tracking-wide">Form</span>
+                  <FormIndicator form={form} size="md" />
+                </div>
+              )}
             </div>
             {movement && (
               <span className="text-sm font-semibold flex items-center gap-1" style={{ color: movement.color }} title={movement.label}>

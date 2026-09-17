@@ -12,6 +12,8 @@ import MatchFilters from "@/components/MatchFilters";
 import DateRangePicker from "@/components/DateRangePicker";
 import ShareButton from "@/components/ShareButton";
 import type { ShareMatchData } from "@/lib/shareCard";
+import FormIndicator from "@/components/FormIndicator";
+import type { FormResult } from "@/lib/form";
 
 function totalGames(r: ResultMatch): number {
   return [...r.player1.sets, ...r.player2.sets].reduce((sum, n) => sum + n, 0);
@@ -53,6 +55,7 @@ export default function ResultsTab({ onPlayerClick }: { onPlayerClick: (name: st
   const [playerQuery, setPlayerQuery] = useState("");
   const [sortField, setSortField] = useState("date");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [formMap, setFormMap] = useState<Record<string, FormResult[]>>({});
 
   const MAX_RANGE_DAYS = 90;
   const rangeValid = useMemo(() => {
@@ -77,6 +80,19 @@ export default function ResultsTab({ onPlayerClick }: { onPlayerClick: (name: st
     () => Array.from(new Set((results ?? []).map((r) => r.tournament))).sort(),
     [results]
   );
+
+  useEffect(() => {
+    if (!results || results.length === 0) return;
+    const names = Array.from(new Set(results.flatMap((r) => [r.player1.name, r.player2.name])));
+    fetch("/api/players/form-batch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ names }),
+    })
+      .then((r) => r.json())
+      .then((d) => setFormMap(d.form ?? {}))
+      .catch(() => {});
+  }, [results]);
 
   const filtered = useMemo(() => {
     if (!results) return [];
@@ -165,8 +181,8 @@ export default function ResultsTab({ onPlayerClick }: { onPlayerClick: (name: st
                   <p className="text-xs text-[var(--text-soft)] mb-2">
                     {formatDate(r.date)} · {totalGames(r)} total games
                   </p>
-                  <ResultRow name={r.player1.name} winner={r.player1.winner} sets={r.player1.sets} onPlayerClick={onPlayerClick} />
-                  <ResultRow name={r.player2.name} winner={r.player2.winner} sets={r.player2.sets} onPlayerClick={onPlayerClick} />
+                  <ResultRow name={r.player1.name} winner={r.player1.winner} sets={r.player1.sets} onPlayerClick={onPlayerClick} form={formMap[r.player1.name]} />
+                  <ResultRow name={r.player2.name} winner={r.player2.winner} sets={r.player2.sets} onPlayerClick={onPlayerClick} form={formMap[r.player2.name]} />
                   {r.summary && <p className="text-xs text-[var(--text-soft)] mt-2">{r.summary}</p>}
                   <div className="flex items-center justify-between mt-2">
                     <a
@@ -209,24 +225,29 @@ function ResultRow({
   winner,
   sets,
   onPlayerClick,
+  form,
 }: {
   name: string;
   winner: boolean;
   sets: number[];
   onPlayerClick: (name: string) => void;
+  form?: FormResult[];
 }) {
   return (
     <div className="flex items-center justify-between text-sm py-0.5">
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onPlayerClick(name);
-        }}
-        className={`hover:underline text-left ${winner ? "font-semibold" : "text-[var(--text-soft)]"}`}
-      >
-        {name}
-      </button>
-      <span className={`flex gap-2 ${winner ? "font-semibold" : "text-[var(--text-soft)]"}`}>
+      <span className="flex items-center gap-1.5 min-w-0">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onPlayerClick(name);
+          }}
+          className={`hover:underline text-left truncate ${winner ? "font-semibold" : "text-[var(--text-soft)]"}`}
+        >
+          {name}
+        </button>
+        <FormIndicator form={form} />
+      </span>
+      <span className={`flex gap-2 shrink-0 ${winner ? "font-semibold" : "text-[var(--text-soft)]"}`}>
         {sets.map((s, i) => (
           <span key={i} className="w-4 text-center">
             {s}
