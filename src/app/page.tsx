@@ -7,12 +7,14 @@ import LiveTab from "@/components/tabs/LiveTab";
 import UpcomingTab from "@/components/tabs/UpcomingTab";
 import ResultsTab from "@/components/tabs/ResultsTab";
 import PlayersTab from "@/components/tabs/PlayersTab";
+import CompareTab from "@/components/tabs/CompareTab";
 
 const TABS = [
   { key: "live", label: "Live" },
   { key: "upcoming", label: "Upcoming" },
   { key: "results", label: "Results" },
   { key: "players", label: "Players" },
+  { key: "compare", label: "Compare" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -62,6 +64,7 @@ export default function Home() {
               onConsumedInitialQuery={() => setPlayerToOpen(null)}
             />
           )}
+          {tab === "compare" && <CompareTab />}
         </section>
       </main>
     </>
