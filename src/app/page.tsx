@@ -8,6 +8,7 @@ import UpcomingTab from "@/components/tabs/UpcomingTab";
 import ResultsTab from "@/components/tabs/ResultsTab";
 import PlayersTab from "@/components/tabs/PlayersTab";
 import CompareTab from "@/components/tabs/CompareTab";
+import HelpModal from "@/components/HelpModal";
 
 const TABS = [
   { key: "live", label: "Live" },
@@ -22,6 +23,7 @@ type TabKey = (typeof TABS)[number]["key"];
 export default function Home() {
   const [tab, setTab] = useState<TabKey>("live");
   const [playerToOpen, setPlayerToOpen] = useState<string | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   function goToPlayer(name: string) {
     setPlayerToOpen(name);
@@ -33,7 +35,16 @@ export default function Home() {
       <TennisBalls />
       <NewsTicker />
       <main className="relative flex-1 flex flex-col items-center px-4 py-10 z-10">
-        <header className="w-full max-w-5xl flex flex-col items-center text-center gap-2 mb-8">
+        <header className="w-full max-w-5xl flex flex-col items-center text-center gap-2 mb-8 relative">
+          <button
+            onClick={() => setShowHelp(true)}
+            aria-label="How MatchPoint works"
+            title="How MatchPoint works"
+            className="absolute top-0 right-0 w-9 h-9 rounded-full grid place-items-center text-base font-bold"
+            style={{ background: "var(--bg-elevated)", border: "1px solid var(--border)", color: "var(--accent)" }}
+          >
+            ⓘ
+          </button>
           <h1 className="text-4xl sm:text-5xl">
             Match<span style={{ color: "var(--accent)" }}>Point</span>
           </h1>
@@ -67,6 +78,8 @@ export default function Home() {
           {tab === "compare" && <CompareTab />}
         </section>
       </main>
+
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
     </>
   );
 }

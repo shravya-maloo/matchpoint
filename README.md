@@ -7,6 +7,7 @@ Live ATP & WTA tennis — live scores, upcoming fixtures, recent results, and pl
 - **Live** — matches in progress right now, both tours, auto-refreshing, with start time and time-on-court
 - **Upcoming** — scheduled fixtures with date/time
 - **Results** — recently completed matches with a date-range picker (presets or custom range, up to 90 days), a "total games" length indicator, links to watch and a highlights search, and a share button that generates a shareable link with a rendered OG preview image
+- ℹ️ **Help guide** — an info button in the header opens a full walkthrough of every tab and feature, including the less obvious ones (form dots, share, highlights, watch links)
 - 📈 **Form indicator** — last-5 win/loss record next to a player's name in Results and on their profile in Players (fetched in one batched request per page load, not one per player)
 - ⚖️ **Compare tab** — pick any two players for a side-by-side stat comparison (ranking, points, hand, backhand), plus their recent head-to-head record and match list (last ~3 months — the data source has no career-history endpoint, so this is recent form between them, not a lifetime record)
 - **Players** — search any player, or click a player's name anywhere in the app (Live/Upcoming/Results cards, or the match detail view) to jump straight to their profile. Profile shows ranking, ranking points and movement (▲/▼), age, plays (hand), backhand style, birthday, recent form, plus whatever ratings/season stats the API returns for that player
