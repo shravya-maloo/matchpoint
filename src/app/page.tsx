@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import TennisBalls from "@/components/TennisBalls";
+import HaikeiBackground from "@/components/HaikeiBackground";
 import NewsTicker from "@/components/NewsTicker";
 import LiveTab from "@/components/tabs/LiveTab";
 import UpcomingTab from "@/components/tabs/UpcomingTab";
@@ -32,6 +34,7 @@ export default function Home() {
 
   return (
     <>
+      <HaikeiBackground />
       <TennisBalls />
       <NewsTicker />
       <main className="relative flex-1 flex flex-col items-center px-4 py-10 z-10">
@@ -58,24 +61,43 @@ export default function Home() {
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`tab-btn ${tab === t.key ? "active" : ""}`}
+              className={`tab-btn relative ${tab === t.key ? "active" : ""}`}
+              style={tab === t.key ? { background: "transparent", color: "#0a1420" } : undefined}
             >
+              {tab === t.key && (
+                <motion.span
+                  layoutId="tab-pill"
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: "var(--accent)", zIndex: -1 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                />
+              )}
               {t.label}
             </button>
           ))}
         </nav>
 
         <section className="w-full max-w-5xl">
-          {tab === "live" && <LiveTab onPlayerClick={goToPlayer} />}
-          {tab === "upcoming" && <UpcomingTab onPlayerClick={goToPlayer} />}
-          {tab === "results" && <ResultsTab onPlayerClick={goToPlayer} />}
-          {tab === "players" && (
-            <PlayersTab
-              initialQuery={playerToOpen}
-              onConsumedInitialQuery={() => setPlayerToOpen(null)}
-            />
-          )}
-          {tab === "compare" && <CompareTab />}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+            >
+              {tab === "live" && <LiveTab onPlayerClick={goToPlayer} />}
+              {tab === "upcoming" && <UpcomingTab onPlayerClick={goToPlayer} />}
+              {tab === "results" && <ResultsTab onPlayerClick={goToPlayer} />}
+              {tab === "players" && (
+                <PlayersTab
+                  initialQuery={playerToOpen}
+                  onConsumedInitialQuery={() => setPlayerToOpen(null)}
+                />
+              )}
+              {tab === "compare" && <CompareTab />}
+            </motion.div>
+          </AnimatePresence>
         </section>
       </main>
 

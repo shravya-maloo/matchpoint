@@ -110,6 +110,24 @@ h1, h2, h3, .headline {
   color: var(--wta);
 }
 
+@keyframes blob-drift-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, 15px) scale(1.03); }
+}
+
+@keyframes blob-drift-slow-reverse {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-24px, -10px) scale(1.02); }
+}
+
+.blob-drift-slow {
+  animation: blob-drift-slow 22s ease-in-out infinite;
+}
+
+.blob-drift-slow-reverse {
+  animation: blob-drift-slow-reverse 26s ease-in-out infinite;
+}
+
 @keyframes ball-drift {
   0% { transform: translate(0, 0) rotate(0deg); }
   25% { transform: translate(18px, -22px) rotate(90deg); }
@@ -160,6 +178,9 @@ h1, h2, h3, .headline {
     animation: none;
   }
   .tennis-ball-drift, .live-dot {
+    animation: none;
+  }
+  .blob-drift-slow, .blob-drift-slow-reverse {
     animation: none;
   }
 }

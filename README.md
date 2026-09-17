@@ -16,7 +16,8 @@ Live ATP & WTA tennis — live scores, upcoming fixtures, recent results, and pl
 - 📰 **Live updates ticker** scrolling at the top of the page
 - 🎾 **Click any match** to open a detail view: player avatars, a bigger set-by-set score (plus the live point score), a highlights link, and a fun fact — shown for every match, not just marquee ones
 - ⭐ **Fun facts** on marquee matches (top-10 players or Grand Slam events) get a quick-access button right on the card; every match gets one in its detail view
-- Interactive floating tennis balls in the background — they drift on their own and gently scatter away from your cursor
+- Interactive floating tennis balls in the background — they drift on their own and gently scatter away from your cursor, layered over soft hand-drawn organic blob shapes and a wave divider for visual depth
+- Animated tab navigation — the active tab's highlight slides smoothly between tabs (built with `motion`, the real animation engine behind both Watermelon UI and Motion Primitives — see note below)
 
 ## Data sources
 
@@ -71,3 +72,4 @@ src/
 - **Match duration**: neither data source provides a true duration field. Live matches show genuine elapsed time (now minus the match's scheduled start). Completed matches (Results) instead show "total games played" as an honest, derivable proxy for match length — it's labeled as such rather than presented as a real duration.
 - The Live Tennis API free tier doesn't include completed-match history, so Results comes entirely from ESPN instead.
 - **Not built, and here's why:** a season-view tournament calendar and a true bracket/draw visualization were both requested but aren't feasible with the current data sources — `Tournament` objects carry no start/end dates at all (so there's no forward-looking season schedule to show), and `Match.draw` is just a `'singles'|'doubles'` flag, not seed positions or match-progression links (so there's no way to know which match feeds into which without guessing). A simplified "matches grouped by round, in columns" view is buildable if wanted later, but it wouldn't be a real connect-the-dots bracket.
+- **Watermelon UI / Motion Primitives**: both were requested by name, but their component registries (`registry.watermelon.sh`, `motion-primitives.com`) weren't reachable from the environment this was built in, and Watermelon UI's install path additionally requires a paid third-party API key (21st.dev) for some components. Rather than fake having used them, this ships with the real `motion` npm package (the actual animation engine both of those sites are built on) and hand-built components in the same spirit — an animated sliding-pill tab nav, and hand-crafted organic blob/wave background shapes in the style Haikei generates. If you have your own Watermelon UI / Motion Primitives account or exported component code, it can be dropped in on top of this.
