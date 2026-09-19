@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { Match } from "livetennisapi";
 import { formatSets, formatCurrentGame, setsPerPlayer } from "@/lib/format";
 import { formatDate, elapsedSince, elapsedMinutes } from "@/lib/dates";
-import { genericWatchSearchUrl } from "@/lib/watch";
+import { genericWatchSearchUrl, highlightSearchLinks } from "@/lib/watch";
 import { tournamentCategory, type TournamentCategory } from "@/lib/tournamentCategory";
 import { isMarqueeMatch } from "@/lib/marquee";
 import FunFactButton from "@/components/FunFactButton";
@@ -102,9 +102,9 @@ export default function LiveTab({ onPlayerClick }: { onPlayerClick: (name: strin
           const p1 = m.players?.p1;
           const p2 = m.players?.p2;
           const marquee = isMarqueeMatch({ ranking1: p1?.ranking, ranking2: p2?.ranking, tournament: m.tournament });
-          const highlightsUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
+          const highlightLinks = highlightSearchLinks(
             `${p1?.name ?? ""} vs ${p2?.name ?? ""} ${m.tournament ?? ""} highlights`
-          )}`;
+          );
           const elapsed = elapsedSince(m.scheduled_time);
 
           return (
@@ -159,16 +159,21 @@ export default function LiveTab({ onPlayerClick }: { onPlayerClick: (name: strin
                 </div>
               </div>
 
-              <a
-                href={highlightsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="text-xs font-semibold mt-3 inline-block"
-                style={{ color: "var(--accent)" }}
-              >
-                ▶ Watch highlights
-              </a>
+              <div className="flex items-center gap-3 mt-3">
+                {highlightLinks.map((h, i) => (
+                  <a
+                    key={i}
+                    href={h.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-xs font-semibold inline-block"
+                    style={{ color: "var(--accent)" }}
+                  >
+                    ▶ {h.label}
+                  </a>
+                ))}
+              </div>
             </div>
           );
         })}

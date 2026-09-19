@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import PlayerAvatar from "./PlayerAvatar";
+import { highlightSearchLinks } from "@/lib/watch";
 
 export type DetailPlayer = { name: string; country?: string | null; ranking?: number | null };
 
@@ -48,9 +49,7 @@ export default function MatchDetailModal({
       .catch(() => setFact(null));
   }, [data.player1.name, data.player2.name, data.tournament]);
 
-  const highlightsUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
-    `${data.player1.name} vs ${data.player2.name} ${data.tournament} highlights`
-  )}`;
+  const highlightLinks = highlightSearchLinks(`${data.player1.name} vs ${data.player2.name} ${data.tournament} highlights`);
 
   return (
     <div
@@ -146,15 +145,20 @@ export default function MatchDetailModal({
 
           <div className="mt-5">
             <h3 className="headline text-xs text-[var(--text-soft)] mb-2">Highlights</h3>
-            <a
-              href={highlightsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-hover card flex items-center justify-center gap-2 py-3 font-semibold text-sm"
-              style={{ background: "var(--bg-elevated-2)", color: "var(--accent)" }}
-            >
-              ▶ Search highlights on YouTube
-            </a>
+            <div className="flex flex-wrap gap-2">
+              {highlightLinks.map((h, i) => (
+                <a
+                  key={i}
+                  href={h.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="card-hover card flex-1 min-w-[140px] flex items-center justify-center gap-2 py-3 font-semibold text-sm text-center"
+                  style={{ background: "var(--bg-elevated-2)", color: "var(--accent)" }}
+                >
+                  ▶ {h.label}
+                </a>
+              ))}
+            </div>
           </div>
 
           <div className="mt-5">

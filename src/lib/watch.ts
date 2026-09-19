@@ -25,3 +25,19 @@ export function watchLinkFor(name: string): string {
 export function genericWatchSearchUrl(tournament: string, tour?: string): string {
   return `https://www.google.com/search?q=${encodeURIComponent(`watch ${tournament} ${tour ?? ""} live stream`.trim())}`;
 }
+
+/**
+ * Where to look for match highlights: not just one app, but a couple of
+ * real entry points. YouTube's search is a solid single source, but Google's
+ * general search often surfaces the exact clip or streaming app directly
+ * (e.g. an ESPN or Tennis Channel result box), which YouTube alone won't.
+ * We deliberately don't include a "universal streaming guide" like
+ * JustWatch here since those index movies/TV shows, not individual sports
+ * matches, and would just return no results for this query shape.
+ */
+export function highlightSearchLinks(query: string): { label: string; url: string }[] {
+  return [
+    { label: "YouTube", url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}` },
+    { label: "Google (all apps)", url: `https://www.google.com/search?q=${encodeURIComponent(query)}&tbm=vid` },
+  ];
+}

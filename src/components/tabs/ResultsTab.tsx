@@ -6,7 +6,7 @@ import FunFactButton from "@/components/FunFactButton";
 import { isMarqueeMatch } from "@/lib/marquee";
 import { tournamentCategory, type TournamentCategory } from "@/lib/tournamentCategory";
 import { formatDate } from "@/lib/dates";
-import { watchLinkFor } from "@/lib/watch";
+import { watchLinkFor, highlightSearchLinks } from "@/lib/watch";
 import MatchDetailModal, { type DetailData } from "@/components/MatchDetailModal";
 import MatchFilters from "@/components/MatchFilters";
 import DateRangePicker from "@/components/DateRangePicker";
@@ -184,19 +184,22 @@ export default function ResultsTab({ onPlayerClick }: { onPlayerClick: (name: st
                   <ResultRow name={r.player1.name} winner={r.player1.winner} sets={r.player1.sets} onPlayerClick={onPlayerClick} form={formMap[r.player1.name]} />
                   <ResultRow name={r.player2.name} winner={r.player2.winner} sets={r.player2.sets} onPlayerClick={onPlayerClick} form={formMap[r.player2.name]} />
                   {r.summary && <p className="text-xs text-[var(--text-soft)] mt-2">{r.summary}</p>}
-                  <div className="flex items-center justify-between mt-2">
-                    <a
-                      href={`https://www.youtube.com/results?search_query=${encodeURIComponent(
-                        `${r.player1.name} vs ${r.player2.name} ${r.tournament} highlights`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-xs font-semibold inline-block"
-                      style={{ color: "var(--accent)" }}
-                    >
-                      ▶ Watch highlights
-                    </a>
+                  <div className="flex items-center justify-between mt-2 gap-2">
+                    <div className="flex items-center gap-3">
+                      {highlightSearchLinks(`${r.player1.name} vs ${r.player2.name} ${r.tournament} highlights`).map((h, i) => (
+                        <a
+                          key={i}
+                          href={h.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs font-semibold inline-block"
+                          style={{ color: "var(--accent)" }}
+                        >
+                          ▶ {h.label}
+                        </a>
+                      ))}
+                    </div>
                     <ShareButton data={shareDataFor(r)} />
                   </div>
                 </div>

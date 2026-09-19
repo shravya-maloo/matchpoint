@@ -20,7 +20,7 @@ Completed matches, with real tools for finding the one you want:
 - **Date-range search**: presets (last 5/7/30/90 days) or a custom range, up to 90 days back.
 - **Form indicator**: a row of last-5 win/loss dots next to each player's name (green W, red L), fetched in a single batched request for the whole page rather than one call per player.
 - **Share**: generates a link with a rendered preview image (an OG image built from that match's real score, not a generic template) that you can post anywhere.
-- **Watch & highlights**: a highlights search link on every match, plus a real broadcaster link where MatchPoint has that data.
+- **Watch & highlights**: highlights search across two real entry points (YouTube, and a Google video search that often surfaces the exact streaming app directly), plus a real broadcaster link where MatchPoint has that data.
 - Shows a "total games played" figure next to each match as an honest stand-in for match length; see [Known limitations](#known-limitations) for why it isn't a real duration.
 
 ### Players
