@@ -12,7 +12,7 @@ function nameMatches(candidate: string, target: string): boolean {
 
 /**
  * Head-to-head within the results window we actually have (ESPN's scoreboard
- * caps at 90 days back — there's no career-history endpoint available here),
+ * caps at 90 days back, and there's no career-history endpoint available here),
  * so this is "recent head-to-head," not a full career record. Callers should
  * label it that way rather than implying it's exhaustive.
  */

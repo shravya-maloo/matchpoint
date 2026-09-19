@@ -25,7 +25,7 @@ export default function ShareButton({ data, className }: { data: ShareMatchData;
         await navigator.share({ title: "MatchPoint", text, url });
         return;
       } catch {
-        // user cancelled the native share sheet, or it's unavailable — fall through to copy
+        // user cancelled the native share sheet, or it's unavailable; fall through to copy
       }
     }
 
@@ -34,7 +34,7 @@ export default function ShareButton({ data, className }: { data: ShareMatchData;
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      // clipboard blocked — nothing more we can do without a visible fallback UI
+      // clipboard blocked; nothing more we can do without a visible fallback UI
     }
   }
 

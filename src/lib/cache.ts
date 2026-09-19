@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
  * Returns the cached payload for `key` if it's younger than `ttlSeconds`;
  * otherwise calls `fetcher()`, stores the result, and returns it.
  *
- * This is a plain read-through cache, not a lock — two requests racing past
+ * This is a plain read-through cache, not a lock: two requests racing past
  * an expired entry will both call `fetcher()` and the last write wins. That's
  * fine here: the fetcher is idempotent (a GET against the tennis API) and the
  * race window is tiny compared to the TTLs we use.
@@ -37,8 +37,8 @@ export async function cached<T>(key: string, ttlSeconds: number, fetcher: () => 
 
 /**
  * Like `cached`, but returns stale data instead of throwing if the fetcher
- * fails and a stale row exists — used for anything we'd rather show slightly
- * out of date than not at all (e.g. rankings, results).
+ * fails and a stale row exists, used for anything we'd rather show slightly
+ * out of date than not at all (e.g. results).
  */
 export async function cachedWithFallback<T>(
   key: string,

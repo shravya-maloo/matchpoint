@@ -1,7 +1,7 @@
 // Shareable match-result links carry the match data directly in the URL
 // (base64url-encoded JSON) instead of looking it up by id server-side. This
-// keeps a shared link valid forever — completed-match results never
-// change — without needing a "fetch match by id" lookup against ESPN's
+// keeps a shared link valid forever (completed-match results never change)
+// without needing a "fetch match by id" lookup against ESPN's
 // date-scoped scoreboard, which has no direct id-based endpoint.
 
 export type ShareMatchData = {

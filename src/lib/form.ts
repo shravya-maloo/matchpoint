@@ -18,7 +18,7 @@ function resultsForPlayer(results: ResultMatch[], name: string): FormResult[] {
 }
 
 /**
- * Last-5 form for a batch of players in one shot — fetches the shared
+ * Last-5 form for a batch of players in one shot. Fetches the shared
  * recent-results window once (it's cached anyway, so this is nearly free
  * when Results has already loaded it this session) rather than one lookup
  * per player.

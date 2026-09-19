@@ -19,9 +19,9 @@ export type DetailData = {
   winner?: 1 | 2 | null;
   startTime?: string | null;
   summary?: string | null;
-  /** e.g. "on court 2h 14m" or "24 total games" — whatever length signal we actually have for this match. */
+  /** e.g. "on court 2h 14m" or "24 total games": whatever length signal we actually have for this match. */
   lengthLabel?: string | null;
-  /** Ways to actually watch — real broadcaster links when we have them, a search link otherwise. */
+  /** Ways to actually watch: real broadcaster links when we have them, a search link otherwise. */
   watchLinks?: { label: string; url: string }[];
 };
 

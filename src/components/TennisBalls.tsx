@@ -32,8 +32,8 @@ export default function TennisBalls({ count = 8 }: { count?: number }) {
         id: i,
         size: 22 + Math.random() * 30,
         // Keep clear of the header/nav zone (roughly the top quarter of the
-        // viewport) so a drifting ball never sits on top of a tab button —
-        // it's decorative, but pointer-events:none doesn't help legibility.
+        // viewport) so a drifting ball never sits on top of a tab button.
+        // It's decorative, but pointer-events:none doesn't help legibility.
         top: 24 + Math.random() * 72,
         left: Math.random() * 92,
         duration: 11 + Math.random() * 14,

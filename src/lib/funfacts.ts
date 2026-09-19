@@ -3,7 +3,7 @@ import { funFacts } from "@/db/schema";
 import { and, eq, ilike, or } from "drizzle-orm";
 
 // Always-available fallback so the feature works even with an empty table.
-// General tennis trivia — nothing tied to a specific match result, so it's
+// General tennis trivia, nothing tied to a specific match result, so it's
 // never at risk of going stale or wrong.
 const GENERIC_FACTS = [
   "The Wimbledon Championships is the only Grand Slam still played on grass.",

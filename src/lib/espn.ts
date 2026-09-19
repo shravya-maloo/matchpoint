@@ -49,10 +49,10 @@ type EspnEvent = {
 
 /**
  * The free-text summary ESPN attaches to a completed match looks like:
- * "Jacob Fearnley (GBR) bt Roberto Carballes Baena (ESP) 7-6 (7-3) 6-3" —
+ * "Jacob Fearnley (GBR) bt Roberto Carballes Baena (ESP) 7-6 (7-3) 6-3",
  * winner first. The structured `athlete` object is sometimes missing (lower
  * rounds, qualifying, retired players not in ESPN's roster yet), in which
- * case this is the only place the real names live — so we parse it as a
+ * case this is the only place the real names live, so we parse it as a
  * fallback rather than showing "Unknown" when the summary clearly has them.
  */
 function parseNamesFromSummary(summary: string | null): { winner: string; winnerCountry: string | null; loser: string; loserCountry: string | null } | null {

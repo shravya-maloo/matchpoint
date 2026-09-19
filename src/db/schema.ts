@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, jsonb, serial } from "drizzle-orm/pg-core";
 
 // A shared cache across every visitor. The free Live Tennis API tier caps out
-// at 100 requests/day total, so every read goes through this table first —
+// at 100 requests/day total, so every read goes through this table first.
 // one visitor's fetch warms the cache for everyone until it expires.
 export const apiCache = pgTable("api_cache", {
   key: text("key").primaryKey(),

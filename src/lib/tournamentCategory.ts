@@ -3,7 +3,7 @@ export type TournamentCategory = "grand_slam" | "masters" | "other";
 const GRAND_SLAMS = ["australian open", "roland garros", "french open", "wimbledon", "us open"];
 
 // Best-effort list of the main ATP Masters 1000 / WTA 1000-equivalent events.
-// Heuristic, not exhaustive — tournament names not on this list (and not a
+// Heuristic, not exhaustive: tournament names not on this list (and not a
 // Grand Slam) fall into "Tour" rather than being guessed at.
 const MASTERS = [
   "indian wells",

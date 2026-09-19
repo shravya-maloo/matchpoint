@@ -12,7 +12,7 @@ function client() {
 }
 
 // Live scores change fast but the free tier's 100/day cap means we can't
-// poll aggressively — 20s balances "feels live" against quota.
+// poll aggressively, so 20s balances "feels live" against quota.
 export async function getLiveMatches(): Promise<Match[]> {
   return cachedWithFallback("tennis:live", 20, async () => {
     const c = client();
